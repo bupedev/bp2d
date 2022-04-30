@@ -1,0 +1,16 @@
+.*
+**/tsconfig.json
+**/webpack.config.js
+
+node_modules
+src
+tests
+api
+coverage
+tmp
+tsconfig.json
+tsconfig.test.json
+webpack.config.js
+jest.config.js
+.gitignore
+.git
