@@ -170,9 +170,9 @@ describe('Add', () => {
     cases.forEach(testCase => {
         let vectorA = testCase.vectorA, vectorB = testCase.vectorB, sum = testCase.sum;
         it(`should be ${sum} when the vectors are ${vectorA} and ${vectorB}`, () => {
-            let sum = vectorA.add(vectorB);
-            expect(sum.x).toBe(sum.x);
-            expect(sum.y).toBe(sum.y);
+            let u = vectorA.add(vectorB);
+            expect(u.x).toBe(sum.x);
+            expect(u.y).toBe(sum.y);
         });
     });
 
@@ -191,6 +191,48 @@ describe('Add', () => {
         let v = cases[3].vectorB.copy();
 
         let w = Vector2.add(u, v);
+
+        expect(u.x).not.toBe(w.x);
+        expect(u.y).not.toBe(w.y);
+        expect(v.x).not.toBe(w.x);
+        expect(v.y).not.toBe(w.y);
+    });
+});
+
+describe('Subtract', () => {
+    type TestObject = { vectorA: Vector2, vectorB: Vector2, difference: Vector2 };
+
+    let cases: TestObject[] = [
+        { vectorA: new Vector2(0, 0), vectorB: new Vector2(0, 1), difference: new Vector2(0, -1) },
+        { vectorA: new Vector2(0, 0), vectorB: new Vector2(1, 0), difference: new Vector2(-1, 0) },
+        { vectorA: new Vector2(-2, 3), vectorB: new Vector2(0, 0), difference: new Vector2(-2, 3) },
+        { vectorA: new Vector2(3, 4), vectorB: new Vector2(-2, -3), difference: new Vector2(5, 7) },
+    ];
+
+    cases.forEach(testCase => {
+        let vectorA = testCase.vectorA, vectorB = testCase.vectorB, difference = testCase.difference;
+        it(`should be ${difference} when the vectors are ${vectorA} and ${vectorB}`, () => {
+            let u = vectorA.subtract(vectorB);
+            expect(u.x).toBe(difference.x);
+            expect(u.y).toBe(difference.y);
+        });
+    });
+
+    it('should return the subtracted instance when called on an object', () => {
+        let u = cases[3].vectorA.copy();
+        let v = cases[3].vectorB.copy();
+
+        let w = u.subtract(v);
+
+        expect(u.x).toBe(w.x);
+        expect(u.y).toBe(w.y);
+    });
+
+    it('should not mutate either vector when called statically', () => {
+        let u = cases[3].vectorA.copy();
+        let v = cases[3].vectorB.copy();
+
+        let w = Vector2.subtract(u, v);
 
         expect(u.x).not.toBe(w.x);
         expect(u.y).not.toBe(w.y);

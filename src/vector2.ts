@@ -3,6 +3,12 @@
  */
 export class Vector2 {
     /**
+     * TODO: 
+     *  - Reconsider whether X and y of a Vector2 instance should be outwardly mutable.
+     *  - Implement an equivalency method with an in-built adjustable threshold for "roughly" comparing vectors
+     */
+
+    /**
      * The proportion of the vector in the x-dimension.
      */
     public x: number;
@@ -13,7 +19,7 @@ export class Vector2 {
     public y: number;
 
     /**
-    * Constructs the vector with specified dimension proportions.
+    * Constructs a vector with specified dimension proportions.
     * @param x The proportion of the vector in the x-dimension, 0 by default.
     * @param y The proportion of the vector in the y-dimension, 0 by default.
     */
@@ -104,7 +110,7 @@ export class Vector2 {
     /**
      * Adds the proportions of another vector to this one.
      * @param other The vector with proportions to add to this one.
-     * @returns The sum of the vectors
+     * @returns The sum of the vectors.
      */
      public add(other: Vector2): Vector2 {
         this.x += other.x;
@@ -114,10 +120,32 @@ export class Vector2 {
 
     /**
      * Adds the proportions of two vectors.
-     * @param other The vector with proportions to add to this one.
-     * @returns The sum of the vectors
+     * @param vectorA The vector to add to.
+     * @param vectorB The vector to add.
+     * @returns The sum of the vectors.
      */
      public static add(vectorA: Vector2, vectorB: Vector2): Vector2 {
+        return vectorA.copy().add(vectorB);
+    }
+
+    /**
+     * Subtracts the proportions of another vector from this one.
+     * @param other The vector with proportions to subtract from this one.
+     * @returns The difference of the vectors.
+     */
+    public subtract(other: Vector2): Vector2 {
+        this.x -= other.x;
+        this.y -= other.y;
+        return this;
+    }
+
+    /**
+     * Subtracts the proportions of two vectors.
+     * @param vectorA The vector to subtract from.
+     * @param vectorB The vector to subtract.
+     * @returns The difference of the vectors.
+     */
+    public static subtract(vectorA: Vector2, vectorB: Vector2): Vector2 {
         return vectorA.copy().add(vectorB);
     }
 
@@ -134,6 +162,7 @@ export class Vector2 {
 
     /**
      * Scales a vector by some amount.
+     * @param vector The vector to scale.
      * @param factor The amount to scale the vector by.
      * @returns A new scaled vector.
      */
@@ -155,6 +184,7 @@ export class Vector2 {
 
     /**
      * Normalizes a vector (scales its magnitude to 1).
+     * @param vector The vector to normalize.
      * @returns A new normalized vector.
      */
      public static normalize(vector: Vector2): Vector2 {
@@ -177,6 +207,7 @@ export class Vector2 {
 
     /**
      * Rotates a vector by some angle.
+     * @param vector The vector to rotate.
      * @param angle The amount to rotate the vector by in radians.
      * @returns A new rotated vector
      */
@@ -201,6 +232,7 @@ export class Vector2 {
 
     /**
      * Reflects a vector along an axis defined by some vector.
+     * @param vector The vector to reflect.
      * @param axis The axis along which to reflect the vector.
      * @returns A new reflected vector
      */
