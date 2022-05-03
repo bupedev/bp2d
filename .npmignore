@@ -6,6 +6,7 @@ node_modules
 src
 tests
 api
+docs
 coverage
 tmp
 tsconfig.json

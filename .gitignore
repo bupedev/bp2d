@@ -136,6 +136,7 @@ lib-esm
 _bundles
 api
 tmp
+docs
 
 # Mac OS
 .DS_Store
