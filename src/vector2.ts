@@ -33,7 +33,7 @@ export class Vector2 {
      * @returns A new Vector2 object.
      */
     public copy(): Vector2 {
-        return new Vector2(this.x, this.y);
+        return vec2(this.x, this.y);
     }
 
     /**
@@ -60,7 +60,7 @@ export class Vector2 {
      */
     public static unit(angle: number): Vector2 {
         let standard = Vector2.standardizeAngle(angle);
-        return new Vector2(Math.cos(standard), Math.sin(standard));
+        return vec2(Math.cos(standard), Math.sin(standard));
     }
 
     /**
@@ -146,7 +146,7 @@ export class Vector2 {
      * @returns The difference of the vectors.
      */
     public static subtract(vectorA: Vector2, vectorB: Vector2): Vector2 {
-        return vectorA.copy().add(vectorB);
+        return vectorA.copy().subtract(vectorB);
     }
 
     /**
@@ -239,4 +239,14 @@ export class Vector2 {
      public static reflect(vector: Vector2, axis: Vector2): Vector2 {
         return vector.copy().reflect(axis);
     }
+}
+
+/**
+ * Shorthand constructor for a Vector2 object.
+ * @param x The proportion of the vector in the x-dimension, 0 by default.
+ * @param y The proportion of the vector in the y-dimension, 0 by default.
+ * @returns A new Vector2 instance.
+ */
+export function vec2(x: number = 0, y: number = 0): Vector2 {
+    return new Vector2(x, y)
 }

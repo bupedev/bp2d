@@ -1,3 +1,3 @@
-import {Vector2} from './vector2';
+import { vec2, Vector2 } from './vector2';
 
-export {Vector2};
+export { vec2, Vector2 };
