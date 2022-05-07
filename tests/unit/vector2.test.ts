@@ -179,6 +179,7 @@ describe('Add', () => {
     type TestObject = { vectorA: Vector2, vectorB: Vector2, sum: Vector2 };
 
     let cases: TestObject[] = [
+        { vectorA: vec2(0, 0), vectorB: vec2(0, 0), sum: vec2(0, 0) },
         { vectorA: vec2(0, 0), vectorB: vec2(0, 1), sum: vec2(0, 1) },
         { vectorA: vec2(0, 0), vectorB: vec2(1, 0), sum: vec2(1, 0) },
         { vectorA: vec2(-2, 3), vectorB: vec2(0, 0), sum: vec2(-2, 3) },
@@ -194,9 +195,18 @@ describe('Add', () => {
         });
     });
 
+    cases.forEach(testCase => {
+        let vectorA = testCase.vectorA.copy(), vectorB = testCase.vectorB.copy(), sum = testCase.sum;
+        it(`should be ${sum} when the vectors are ${vectorA} and ${vectorB} (static)`, () => {
+            let u = Vector2.add(vectorA, vectorB);
+            expect(u.x).toBe(sum.x);
+            expect(u.y).toBe(sum.y);
+        });
+    });
+
     it('should return the summed instance when called on an object', () => {
-        let u = cases[3].vectorA.copy();
-        let v = cases[3].vectorB.copy();
+        let u = cases[4].vectorA.copy();
+        let v = cases[4].vectorB.copy();
 
         let w = u.add(v);
 
@@ -205,8 +215,8 @@ describe('Add', () => {
     });
 
     it('should not mutate either vector when called statically', () => {
-        let u = cases[3].vectorA.copy();
-        let v = cases[3].vectorB.copy();
+        let u = cases[4].vectorA.copy();
+        let v = cases[4].vectorB.copy();
 
         let w = Vector2.add(u, v);
 
@@ -231,6 +241,15 @@ describe('Subtract', () => {
         let vectorA = testCase.vectorA.copy(), vectorB = testCase.vectorB.copy(), difference = testCase.difference;
         it(`should be ${difference} when the vectors are ${vectorA} and ${vectorB} (instance)`, () => {
             let u = vectorA.subtract(vectorB);
+            expect(u.x).toBe(difference.x);
+            expect(u.y).toBe(difference.y);
+        });
+    });
+
+    cases.forEach(testCase => {
+        let vectorA = testCase.vectorA.copy(), vectorB = testCase.vectorB.copy(), difference = testCase.difference;
+        it(`should be ${difference} when the vectors are ${vectorA} and ${vectorB} (static)`, () => {
+            let u = Vector2.subtract(vectorA, vectorB);
             expect(u.x).toBe(difference.x);
             expect(u.y).toBe(difference.y);
         });
@@ -280,6 +299,15 @@ describe('Scale', () => {
         });
     });
 
+    cases.forEach(testCase => {
+        let scaled = testCase.scaled.copy(), vector = testCase.vector.copy(), factor = testCase.factor;
+        it(`should be ${scaled} when the vector is ${vector} and the scale is ${factor} (static)`, () => {
+            let u = Vector2.scale(vector, factor);
+            expect(u.x).toBe(scaled.x);
+            expect(u.y).toBe(scaled.y);
+        });
+    });
+
     it('should return the scaled instance when called on an object', () => {
         let u = cases[0].vector.copy();
         let f = cases[0].factor;
@@ -320,6 +348,15 @@ describe('Normalize', () => {
             vector.normalize();
             expect(vector.x).toBeCloseTo(normalized.x);
             expect(vector.y).toBeCloseTo(normalized.y);
+        });
+    });
+
+    cases.forEach(testCase => {
+        let vector = testCase.vector.copy(), normalized = testCase.normalized.copy();
+        it(`should be ${normalized} when the vector is ${vector} (static)`, () => {
+            let u = Vector2.normalize(vector);
+            expect(u.x).toBeCloseTo(normalized.x);
+            expect(u.y).toBeCloseTo(normalized.y);
         });
     });
 
@@ -366,6 +403,15 @@ describe('Rotate', () => {
         });
     });
 
+    cases.forEach(testCase => {
+        let vector = testCase.vector.copy(), angle = testCase.angle, rotated = testCase.rotated.copy();
+        it(`should be ${rotated} when the vector is ${vector} and the angle is ${angle} (static)`, () => {
+            let u = Vector2.rotate(vector, angle);
+            expect(u.x).toBeCloseTo(rotated.x);
+            expect(u.y).toBeCloseTo(rotated.y);
+        });
+    });
+
     it('should return the rotated instance when called on an object', () => {
         let u = cases[0].vector.copy();
         let a = cases[0].angle;
@@ -406,6 +452,15 @@ describe('Reflect', () => {
             vector.reflect(axis);
             expect(vector.x).toBeCloseTo(reflected.x);
             expect(vector.y).toBeCloseTo(reflected.y);
+        });
+    });
+
+    cases.forEach(testCase => {
+        let vector = testCase.vector.copy(), axis = testCase.axis, reflected = testCase.reflected.copy();
+        it(`should be ${reflected} when the vector is ${vector} and the angle is ${axis} (static)`, () => {
+            let u = Vector2.reflect(vector, axis);
+            expect(u.x).toBeCloseTo(reflected.x);
+            expect(u.y).toBeCloseTo(reflected.y);
         });
     });
 
