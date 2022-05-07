@@ -1,9 +1,10 @@
 {
   "name": "bp2d",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A UMD geometry library written in Typescript ",
   "main": "index.js",
   "scripts": {
+    "all": "npm run build && npm run tests && npm run docs",
     "clean": "shx rm -rf _bundles lib lib-esm",
     "build": "npm run clean && tsc && tsc -m es6 --outDir lib-esm && webpack",
     "tests": "jest --coverage --verbose",
