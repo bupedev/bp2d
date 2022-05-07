@@ -1,4 +1,4 @@
 import { vec2, Vector2 } from './vector2';
-import { Edge } from './edge';
+import { edge, Edge } from './edge';
 
-export { vec2, Vector2, Edge };
+export { vec2, Vector2, edge, Edge };
