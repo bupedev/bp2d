@@ -179,7 +179,6 @@ describe('Add', () => {
     type TestObject = { vectorA: Vector2, vectorB: Vector2, sum: Vector2 };
 
     let cases: TestObject[] = [
-        { vectorA: vec2(0, 0), vectorB: vec2(0, 0), sum: vec2(0, 0) },
         { vectorA: vec2(0, 0), vectorB: vec2(0, 1), sum: vec2(0, 1) },
         { vectorA: vec2(0, 0), vectorB: vec2(1, 0), sum: vec2(1, 0) },
         { vectorA: vec2(-2, 3), vectorB: vec2(0, 0), sum: vec2(-2, 3) },
