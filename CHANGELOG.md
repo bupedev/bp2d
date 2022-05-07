@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2022-05-08
+
+### Added
+
+- Added the `Edge` class with tests, minimal API documentation and support for the following operations:
+  - Shorthand construction
+  - Copying
+  - Log formatting
+  - Displacement vector calculation
+  - Normal vector calculation
+  - Length calculation
+  - Intersect edges
+
 ## [0.1.2] - 2022-05-07
 
 ### Added
