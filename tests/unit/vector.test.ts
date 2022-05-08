@@ -1,8 +1,8 @@
-import { vec2, Vector2 } from '../../src/vector2'
+import { vec, Vector } from '../../src/vector'
 
 describe('Constructor', () => {
     it('should default all proportions to 0', () => {
-        let v = new Vector2();
+        let v = new Vector();
 
         expect(v.x).toBe(0);
         expect(v.y).toBe(0);
@@ -11,7 +11,7 @@ describe('Constructor', () => {
     it('should store proportions correctly', () => {
         let x = 1;
         let y = 2;
-        let v = new Vector2(x, y);
+        let v = new Vector(x, y);
 
         expect(v.x).toBe(x);
         expect(v.y).toBe(y);
@@ -20,7 +20,7 @@ describe('Constructor', () => {
 
 describe('Shorthand Constructor', () => {
     it('should default all proportions to 0', () => {
-        let v = vec2();
+        let v = vec();
 
         expect(v.x).toBe(0);
         expect(v.y).toBe(0);
@@ -29,7 +29,7 @@ describe('Shorthand Constructor', () => {
     it('should store proportions correctly', () => {
         let x = 1;
         let y = 2;
-        let v = vec2(x, y);
+        let v = vec(x, y);
 
         expect(v.x).toBe(x);
         expect(v.y).toBe(y);
@@ -38,7 +38,7 @@ describe('Shorthand Constructor', () => {
 
 describe('Copy', () => {
     it('should return a vector with the same dimension proportions', () => {
-        let u = vec2(1, 1);
+        let u = vec(1, 1);
         let v = u.copy();
 
         expect(u.x).toBe(v.x);
@@ -46,7 +46,7 @@ describe('Copy', () => {
     });
 
     it('should return a distinctly different vector instance', () => {
-        let u = vec2(1, 1);
+        let u = vec(1, 1);
         let v = u.copy();
 
         u.x = 2, u.y = 2;
@@ -57,25 +57,25 @@ describe('Copy', () => {
 });
 
 describe('Unit', () => {
-    type TestObject = { angle: number, unit: Vector2 };
+    type TestObject = { angle: number, unit: Vector };
 
     let cases: TestObject[] = [
-        { angle: - Math.PI / 6, unit: vec2((3 ** 0.5) / 2, -1 / 2) },
-        { angle: -5 * Math.PI / 4, unit: vec2(-1 / (2 ** 0.5), 1 / (2 ** 0.5)) },
-        { angle: 0, unit: vec2(1, 0) },
-        { angle: Math.PI / 6, unit: vec2((3 ** 0.5) / 2, 1 / 2) },
-        { angle: 2 * Math.PI / 3, unit: vec2(-1 / 2, (3 ** 0.5) / 2) },
-        { angle: 5 * Math.PI / 4, unit: vec2(-1 / (2 ** 0.5), -1 / (2 ** 0.5)) },
-        { angle: 5 * Math.PI / 3, unit: vec2(1 / 2, -(3 ** 0.5) / 2) },
-        { angle: 2 * Math.PI, unit: vec2(1, 0) },
-        { angle: 13 * Math.PI / 6, unit: vec2((3 ** 0.5) / 2, 1 / 2) },
-        { angle: 13 * Math.PI / 4, unit: vec2(-1 / (2 ** 0.5), -1 / (2 ** 0.5)) },
+        { angle: - Math.PI / 6, unit: vec((3 ** 0.5) / 2, -1 / 2) },
+        { angle: -5 * Math.PI / 4, unit: vec(-1 / (2 ** 0.5), 1 / (2 ** 0.5)) },
+        { angle: 0, unit: vec(1, 0) },
+        { angle: Math.PI / 6, unit: vec((3 ** 0.5) / 2, 1 / 2) },
+        { angle: 2 * Math.PI / 3, unit: vec(-1 / 2, (3 ** 0.5) / 2) },
+        { angle: 5 * Math.PI / 4, unit: vec(-1 / (2 ** 0.5), -1 / (2 ** 0.5)) },
+        { angle: 5 * Math.PI / 3, unit: vec(1 / 2, -(3 ** 0.5) / 2) },
+        { angle: 2 * Math.PI, unit: vec(1, 0) },
+        { angle: 13 * Math.PI / 6, unit: vec((3 ** 0.5) / 2, 1 / 2) },
+        { angle: 13 * Math.PI / 4, unit: vec(-1 / (2 ** 0.5), -1 / (2 ** 0.5)) },
     ];
 
     cases.forEach(testCase => {
         let angle = testCase.angle, unit = testCase.unit.copy();
         it(`should be ${unit} when angle is ${(angle < 0 ? "" : "+") + angle.toFixed(3)}`, () => {
-            let v = Vector2.unit(angle);
+            let v = Vector.unit(angle);
             expect(v.x).toBeCloseTo(unit.x);
             expect(v.y).toBeCloseTo(unit.y);
         });
@@ -83,13 +83,13 @@ describe('Unit', () => {
 });
 
 describe('Magnitude', () => {
-    type TestObject = { vector: Vector2, magnitude: number };
+    type TestObject = { vector: Vector, magnitude: number };
 
     let cases: TestObject[] = [
-        { vector: vec2(3, 4), magnitude: 5 },
-        { vector: vec2(-5, 12), magnitude: 13 },
-        { vector: vec2(8, -15), magnitude: 17 },
-        { vector: vec2(-7, -24), magnitude: 25 }
+        { vector: vec(3, 4), magnitude: 5 },
+        { vector: vec(-5, 12), magnitude: 13 },
+        { vector: vec(8, -15), magnitude: 17 },
+        { vector: vec(-7, -24), magnitude: 25 }
     ];
 
     cases.forEach(testCase => {
@@ -101,13 +101,13 @@ describe('Magnitude', () => {
 });
 
 describe('Angle', () => {
-    type TestObject = { vector: Vector2, angle: number };
+    type TestObject = { vector: Vector, angle: number };
 
     let cases: TestObject[] = [
-        { vector: vec2((3 ** 0.5) / 2, 1 / 2), angle: Math.PI / 6 },
-        { vector: vec2(-1 / 2, (3 ** 0.5) / 2), angle: 2 * Math.PI / 3 },
-        { vector: vec2(-1 / (2 ** 0.5), -1 / (2 ** 0.5)), angle: 5 * Math.PI / 4 },
-        { vector: vec2(0, -1), angle: 3 * Math.PI / 2 }
+        { vector: vec((3 ** 0.5) / 2, 1 / 2), angle: Math.PI / 6 },
+        { vector: vec(-1 / 2, (3 ** 0.5) / 2), angle: 2 * Math.PI / 3 },
+        { vector: vec(-1 / (2 ** 0.5), -1 / (2 ** 0.5)), angle: 5 * Math.PI / 4 },
+        { vector: vec(0, -1), angle: 3 * Math.PI / 2 }
     ];
 
     cases.forEach(testCase => {
@@ -119,14 +119,14 @@ describe('Angle', () => {
 });
 
 describe('Dot Product', () => {
-    type TestObject = { vectorA: Vector2, vectorB: Vector2, product: number };
+    type TestObject = { vectorA: Vector, vectorB: Vector, product: number };
 
     let cases: TestObject[] = [
-        { vectorA: vec2(1, 2), vectorB: vec2(3, 1), product: 5 },
-        { vectorA: vec2(-1, 2), vectorB: vec2(3, 1), product: -1 },
-        { vectorA: vec2(1, 2), vectorB: vec2(3, -1), product: 1 },
-        { vectorA: vec2(-1, 2), vectorB: vec2(3, -1), product: -5 },
-        { vectorA: vec2(-1, -2), vectorB: vec2(-3, -1), product: 5 }
+        { vectorA: vec(1, 2), vectorB: vec(3, 1), product: 5 },
+        { vectorA: vec(-1, 2), vectorB: vec(3, 1), product: -1 },
+        { vectorA: vec(1, 2), vectorB: vec(3, -1), product: 1 },
+        { vectorA: vec(-1, 2), vectorB: vec(3, -1), product: -5 },
+        { vectorA: vec(-1, -2), vectorB: vec(-3, -1), product: 5 }
     ];
 
     cases.forEach(testCase => {
@@ -139,14 +139,14 @@ describe('Dot Product', () => {
 
 
 describe('Cross Product', () => {
-    type TestObject = { vectorA: Vector2, vectorB: Vector2, product: number };
+    type TestObject = { vectorA: Vector, vectorB: Vector, product: number };
 
     let cases: TestObject[] = [
-        { vectorA: vec2(1, 2), vectorB: vec2(3, 1), product: -5 },
-        { vectorA: vec2(-1, 2), vectorB: vec2(3, 1), product: -7 },
-        { vectorA: vec2(1, -2), vectorB: vec2(3, 1), product: 7 },
-        { vectorA: vec2(-1, 2), vectorB: vec2(-3, 1), product: 5 },
-        { vectorA: vec2(-1, -2), vectorB: vec2(-3, -1), product: -5 }
+        { vectorA: vec(1, 2), vectorB: vec(3, 1), product: -5 },
+        { vectorA: vec(-1, 2), vectorB: vec(3, 1), product: -7 },
+        { vectorA: vec(1, -2), vectorB: vec(3, 1), product: 7 },
+        { vectorA: vec(-1, 2), vectorB: vec(-3, 1), product: 5 },
+        { vectorA: vec(-1, -2), vectorB: vec(-3, -1), product: -5 }
     ];
 
     cases.forEach(testCase => {
@@ -158,13 +158,13 @@ describe('Cross Product', () => {
 });
 
 describe('Angle Between', () => {
-    type TestObject = { start: Vector2, end: Vector2, angle: number };
+    type TestObject = { start: Vector, end: Vector, angle: number };
 
     let cases: TestObject[] = [
-        { start: vec2((3 ** 0.5) / 2, 1 / 2), end: vec2(-(3 ** 0.5) / 2, 1 / 2), angle: 2 * Math.PI / 3 },
-        { start: vec2(-(3 ** 0.5) / 2, 1 / 2), end: vec2((3 ** 0.5) / 2, 1 / 2), angle: 4 * Math.PI / 3 },
-        { start: vec2(1 / (2 ** 0.5), 1 / (2 ** 0.5)), end: vec2(-1 / (2 ** 0.5), -1 / (2 ** 0.5)), angle: Math.PI },
-        { start: vec2(-1 / (2 ** 0.5), -1 / (2 ** 0.5)), end: vec2(1 / (2 ** 0.5), 1 / (2 ** 0.5)), angle: Math.PI },
+        { start: vec((3 ** 0.5) / 2, 1 / 2), end: vec(-(3 ** 0.5) / 2, 1 / 2), angle: 2 * Math.PI / 3 },
+        { start: vec(-(3 ** 0.5) / 2, 1 / 2), end: vec((3 ** 0.5) / 2, 1 / 2), angle: 4 * Math.PI / 3 },
+        { start: vec(1 / (2 ** 0.5), 1 / (2 ** 0.5)), end: vec(-1 / (2 ** 0.5), -1 / (2 ** 0.5)), angle: Math.PI },
+        { start: vec(-1 / (2 ** 0.5), -1 / (2 ** 0.5)), end: vec(1 / (2 ** 0.5), 1 / (2 ** 0.5)), angle: Math.PI },
     ];
 
     cases.forEach(testCase => {
@@ -176,14 +176,14 @@ describe('Angle Between', () => {
 });
 
 describe('Add', () => {
-    type TestObject = { vectorA: Vector2, vectorB: Vector2, sum: Vector2 };
+    type TestObject = { vectorA: Vector, vectorB: Vector, sum: Vector };
 
     let cases: TestObject[] = [
-        { vectorA: vec2(0, 0), vectorB: vec2(0, 0), sum: vec2(0, 0) },
-        { vectorA: vec2(0, 0), vectorB: vec2(0, 1), sum: vec2(0, 1) },
-        { vectorA: vec2(0, 0), vectorB: vec2(1, 0), sum: vec2(1, 0) },
-        { vectorA: vec2(-2, 3), vectorB: vec2(0, 0), sum: vec2(-2, 3) },
-        { vectorA: vec2(3, 4), vectorB: vec2(-2, -3), sum: vec2(1, 1) },
+        { vectorA: vec(0, 0), vectorB: vec(0, 0), sum: vec(0, 0) },
+        { vectorA: vec(0, 0), vectorB: vec(0, 1), sum: vec(0, 1) },
+        { vectorA: vec(0, 0), vectorB: vec(1, 0), sum: vec(1, 0) },
+        { vectorA: vec(-2, 3), vectorB: vec(0, 0), sum: vec(-2, 3) },
+        { vectorA: vec(3, 4), vectorB: vec(-2, -3), sum: vec(1, 1) },
     ];
 
     cases.forEach(testCase => {
@@ -198,7 +198,7 @@ describe('Add', () => {
     cases.forEach(testCase => {
         let vectorA = testCase.vectorA.copy(), vectorB = testCase.vectorB.copy(), sum = testCase.sum;
         it(`should be ${sum} when the vectors are ${vectorA} and ${vectorB} (static)`, () => {
-            let u = Vector2.add(vectorA, vectorB);
+            let u = Vector.add(vectorA, vectorB);
             expect(u.x).toBe(sum.x);
             expect(u.y).toBe(sum.y);
         });
@@ -218,7 +218,7 @@ describe('Add', () => {
         let u = cases[4].vectorA.copy();
         let v = cases[4].vectorB.copy();
 
-        let w = Vector2.add(u, v);
+        let w = Vector.add(u, v);
 
         expect(u.x).not.toBe(w.x);
         expect(u.y).not.toBe(w.y);
@@ -228,13 +228,13 @@ describe('Add', () => {
 });
 
 describe('Subtract', () => {
-    type TestObject = { vectorA: Vector2, vectorB: Vector2, difference: Vector2 };
+    type TestObject = { vectorA: Vector, vectorB: Vector, difference: Vector };
 
     let cases: TestObject[] = [
-        { vectorA: vec2(0, 0), vectorB: vec2(0, 1), difference: vec2(0, -1) },
-        { vectorA: vec2(0, 0), vectorB: vec2(1, 0), difference: vec2(-1, 0) },
-        { vectorA: vec2(-2, 3), vectorB: vec2(0, 0), difference: vec2(-2, 3) },
-        { vectorA: vec2(3, 4), vectorB: vec2(-2, -3), difference: vec2(5, 7) },
+        { vectorA: vec(0, 0), vectorB: vec(0, 1), difference: vec(0, -1) },
+        { vectorA: vec(0, 0), vectorB: vec(1, 0), difference: vec(-1, 0) },
+        { vectorA: vec(-2, 3), vectorB: vec(0, 0), difference: vec(-2, 3) },
+        { vectorA: vec(3, 4), vectorB: vec(-2, -3), difference: vec(5, 7) },
     ];
 
     cases.forEach(testCase => {
@@ -249,7 +249,7 @@ describe('Subtract', () => {
     cases.forEach(testCase => {
         let vectorA = testCase.vectorA.copy(), vectorB = testCase.vectorB.copy(), difference = testCase.difference;
         it(`should be ${difference} when the vectors are ${vectorA} and ${vectorB} (static)`, () => {
-            let u = Vector2.subtract(vectorA, vectorB);
+            let u = Vector.subtract(vectorA, vectorB);
             expect(u.x).toBe(difference.x);
             expect(u.y).toBe(difference.y);
         });
@@ -269,7 +269,7 @@ describe('Subtract', () => {
         let u = cases[3].vectorA.copy();
         let v = cases[3].vectorB.copy();
 
-        let w = Vector2.subtract(u, v);
+        let w = Vector.subtract(u, v);
 
         expect(u.x).not.toBe(w.x);
         expect(u.y).not.toBe(w.y);
@@ -279,15 +279,15 @@ describe('Subtract', () => {
 });
 
 describe('Scale', () => {
-    type TestObject = { vector: Vector2, factor: number, scaled: Vector2 };
+    type TestObject = { vector: Vector, factor: number, scaled: Vector };
 
     let cases: TestObject[] = [
-        { vector: vec2(1, 2), factor: 2, scaled: vec2(2, 4) },
-        { vector: vec2(1, 2), factor: 0.5, scaled: vec2(0.5, 1) },
-        { vector: vec2(1, 2), factor: 0, scaled: vec2(0, 0) },
-        { vector: vec2(0, 0), factor: 1, scaled: vec2(0, 0) },
-        { vector: vec2(1, 0), factor: 2, scaled: vec2(2, 0) },
-        { vector: vec2(0, 1), factor: 2, scaled: vec2(0, 2) },
+        { vector: vec(1, 2), factor: 2, scaled: vec(2, 4) },
+        { vector: vec(1, 2), factor: 0.5, scaled: vec(0.5, 1) },
+        { vector: vec(1, 2), factor: 0, scaled: vec(0, 0) },
+        { vector: vec(0, 0), factor: 1, scaled: vec(0, 0) },
+        { vector: vec(1, 0), factor: 2, scaled: vec(2, 0) },
+        { vector: vec(0, 1), factor: 2, scaled: vec(0, 2) },
     ];
 
     cases.forEach(testCase => {
@@ -302,7 +302,7 @@ describe('Scale', () => {
     cases.forEach(testCase => {
         let scaled = testCase.scaled.copy(), vector = testCase.vector.copy(), factor = testCase.factor;
         it(`should be ${scaled} when the vector is ${vector} and the scale is ${factor} (static)`, () => {
-            let u = Vector2.scale(vector, factor);
+            let u = Vector.scale(vector, factor);
             expect(u.x).toBe(scaled.x);
             expect(u.y).toBe(scaled.y);
         });
@@ -322,7 +322,7 @@ describe('Scale', () => {
         let u = cases[0].vector.copy();
         let f = cases[0].factor;
 
-        let v = Vector2.scale(u, f);
+        let v = Vector.scale(u, f);
 
         expect(u.x).not.toBe(v.x);
         expect(u.y).not.toBe(v.y);
@@ -330,16 +330,16 @@ describe('Scale', () => {
 });
 
 describe('Normalize', () => {
-    type TestObject = { vector: Vector2, normalized: Vector2 };
+    type TestObject = { vector: Vector, normalized: Vector };
 
     let cases: TestObject[] = [
-        { vector: vec2(3, 4), normalized: vec2(3 / 5, 4 / 5) },
-        { vector: vec2(-3, 4), normalized: vec2(-3 / 5, 4 / 5) },
-        { vector: vec2(3, -4), normalized: vec2(3 / 5, -4 / 5) },
-        { vector: vec2(-3, -4), normalized: vec2(-3 / 5, -4 / 5) },
-        { vector: vec2(0, 1), normalized: vec2(0, 1) },
-        { vector: vec2(1, 0), normalized: vec2(1, 0) },
-        { vector: vec2(0, 0), normalized: vec2(0, 0) },
+        { vector: vec(3, 4), normalized: vec(3 / 5, 4 / 5) },
+        { vector: vec(-3, 4), normalized: vec(-3 / 5, 4 / 5) },
+        { vector: vec(3, -4), normalized: vec(3 / 5, -4 / 5) },
+        { vector: vec(-3, -4), normalized: vec(-3 / 5, -4 / 5) },
+        { vector: vec(0, 1), normalized: vec(0, 1) },
+        { vector: vec(1, 0), normalized: vec(1, 0) },
+        { vector: vec(0, 0), normalized: vec(0, 0) },
     ];
 
     cases.forEach(testCase => {
@@ -354,7 +354,7 @@ describe('Normalize', () => {
     cases.forEach(testCase => {
         let vector = testCase.vector.copy(), normalized = testCase.normalized.copy();
         it(`should be ${normalized} when the vector is ${vector} (static)`, () => {
-            let u = Vector2.normalize(vector);
+            let u = Vector.normalize(vector);
             expect(u.x).toBeCloseTo(normalized.x);
             expect(u.y).toBeCloseTo(normalized.y);
         });
@@ -372,7 +372,7 @@ describe('Normalize', () => {
     it('should not mutate the vector when called statically', () => {
         let u = cases[0].vector.copy();
 
-        let v = Vector2.normalize(u);
+        let v = Vector.normalize(u);
 
         expect(u.x).not.toBe(v.x);
         expect(u.y).not.toBe(v.y);
@@ -380,18 +380,18 @@ describe('Normalize', () => {
 });
 
 describe('Rotate', () => {
-    type TestObject = { vector: Vector2, angle: number, rotated: Vector2 };
+    type TestObject = { vector: Vector, angle: number, rotated: Vector };
 
     let cases: TestObject[] = [
-        { vector: vec2(1, 0), angle: Math.PI / 3, rotated: vec2(1 / 2, (3 ** 0.5) / 2) },
-        { vector: vec2(1 / (2 ** 0.5), 1 / (2 ** 0.5)), angle: Math.PI / 2, rotated: vec2(-(2 ** 0.5) / 2, (2 ** 0.5) / 2) },
-        { vector: vec2(0, 1), angle: 11 * Math.PI / 6, rotated: vec2(1 / 2, (3 ** 0.5) / 2) },
-        { vector: vec2(1, 0), angle: 7 * Math.PI / 3, rotated: vec2(1 / 2, (3 ** 0.5) / 2) },
-        { vector: vec2(1 / (2 ** 0.5), 1 / (2 ** 0.5)), angle: 5 * Math.PI / 2, rotated: vec2(-(2 ** 0.5) / 2, (2 ** 0.5) / 2) },
-        { vector: vec2(0, 1), angle: 23 * Math.PI / 6, rotated: vec2(1 / 2, (3 ** 0.5) / 2) },
-        { vector: vec2(1, 0), angle: -Math.PI / 3, rotated: vec2(1 / 2, -(3 ** 0.5) / 2) },
-        { vector: vec2(1 / (2 ** 0.5), 1 / (2 ** 0.5)), angle: -Math.PI / 2, rotated: vec2(1 / (2 ** 0.5), -1 / (2 ** 0.5)) },
-        { vector: vec2(0, 1), angle: -11 * Math.PI / 6, rotated: vec2(-1 / 2, (3 ** 0.5) / 2) },
+        { vector: vec(1, 0), angle: Math.PI / 3, rotated: vec(1 / 2, (3 ** 0.5) / 2) },
+        { vector: vec(1 / (2 ** 0.5), 1 / (2 ** 0.5)), angle: Math.PI / 2, rotated: vec(-(2 ** 0.5) / 2, (2 ** 0.5) / 2) },
+        { vector: vec(0, 1), angle: 11 * Math.PI / 6, rotated: vec(1 / 2, (3 ** 0.5) / 2) },
+        { vector: vec(1, 0), angle: 7 * Math.PI / 3, rotated: vec(1 / 2, (3 ** 0.5) / 2) },
+        { vector: vec(1 / (2 ** 0.5), 1 / (2 ** 0.5)), angle: 5 * Math.PI / 2, rotated: vec(-(2 ** 0.5) / 2, (2 ** 0.5) / 2) },
+        { vector: vec(0, 1), angle: 23 * Math.PI / 6, rotated: vec(1 / 2, (3 ** 0.5) / 2) },
+        { vector: vec(1, 0), angle: -Math.PI / 3, rotated: vec(1 / 2, -(3 ** 0.5) / 2) },
+        { vector: vec(1 / (2 ** 0.5), 1 / (2 ** 0.5)), angle: -Math.PI / 2, rotated: vec(1 / (2 ** 0.5), -1 / (2 ** 0.5)) },
+        { vector: vec(0, 1), angle: -11 * Math.PI / 6, rotated: vec(-1 / 2, (3 ** 0.5) / 2) },
     ];
 
     cases.forEach(testCase => {
@@ -406,7 +406,7 @@ describe('Rotate', () => {
     cases.forEach(testCase => {
         let vector = testCase.vector.copy(), angle = testCase.angle, rotated = testCase.rotated.copy();
         it(`should be ${rotated} when the vector is ${vector} and the angle is ${angle} (static)`, () => {
-            let u = Vector2.rotate(vector, angle);
+            let u = Vector.rotate(vector, angle);
             expect(u.x).toBeCloseTo(rotated.x);
             expect(u.y).toBeCloseTo(rotated.y);
         });
@@ -426,7 +426,7 @@ describe('Rotate', () => {
         let u = cases[0].vector.copy();
         let a = cases[0].angle;
 
-        let v = Vector2.rotate(u, a);
+        let v = Vector.rotate(u, a);
 
         expect(u.x).not.toBe(v.x);
         expect(u.y).not.toBe(v.y);
@@ -434,16 +434,16 @@ describe('Rotate', () => {
 });
 
 describe('Reflect', () => {
-    type TestObject = { vector: Vector2, axis: Vector2, reflected: Vector2 };
+    type TestObject = { vector: Vector, axis: Vector, reflected: Vector };
 
     let cases: TestObject[] = [
-        { vector: vec2(1, 0), axis: vec2(0, 1), reflected: vec2(-1, 0) },
-        { vector: vec2(1, 0), axis: vec2(0, -1), reflected: vec2(-1, 0) },
-        { vector: vec2(0, 1), axis: vec2(1, 0), reflected: vec2(0, -1) },
-        { vector: vec2(0, 1), axis: vec2(-1, 0), reflected: vec2(0, -1) },
-        { vector: vec2(2, 1), axis: vec2(1, 1), reflected: vec2(1, 2) },
-        { vector: vec2(2, 1), axis: vec2(-1, 1), reflected: vec2(-1, -2) },
-        { vector: vec2(0, 0), axis: vec2(1, 1), reflected: vec2(0, 0) },
+        { vector: vec(1, 0), axis: vec(0, 1), reflected: vec(-1, 0) },
+        { vector: vec(1, 0), axis: vec(0, -1), reflected: vec(-1, 0) },
+        { vector: vec(0, 1), axis: vec(1, 0), reflected: vec(0, -1) },
+        { vector: vec(0, 1), axis: vec(-1, 0), reflected: vec(0, -1) },
+        { vector: vec(2, 1), axis: vec(1, 1), reflected: vec(1, 2) },
+        { vector: vec(2, 1), axis: vec(-1, 1), reflected: vec(-1, -2) },
+        { vector: vec(0, 0), axis: vec(1, 1), reflected: vec(0, 0) },
     ];
 
     cases.forEach(testCase => {
@@ -458,7 +458,7 @@ describe('Reflect', () => {
     cases.forEach(testCase => {
         let vector = testCase.vector.copy(), axis = testCase.axis, reflected = testCase.reflected.copy();
         it(`should be ${reflected} when the vector is ${vector} and the angle is ${axis} (static)`, () => {
-            let u = Vector2.reflect(vector, axis);
+            let u = Vector.reflect(vector, axis);
             expect(u.x).toBeCloseTo(reflected.x);
             expect(u.y).toBeCloseTo(reflected.y);
         });
@@ -477,7 +477,7 @@ describe('Reflect', () => {
         let u = cases[4].vector.copy();
         let a = cases[4].axis.copy();
 
-        let v = Vector2.reflect(u, a);
+        let v = Vector.reflect(u, a);
 
         expect(u.x).not.toBe(v.x);
         expect(u.y).not.toBe(v.y);

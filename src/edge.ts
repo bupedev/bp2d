@@ -1,4 +1,4 @@
-import { Vector2 } from './vector2'
+import { Vector } from './vector'
 
 /**
  * A polygonal edge in 2-dimensional space, effectively a line segment.
@@ -7,19 +7,19 @@ export class Edge {
     /**
      * A vector representing the starting vertex of the edge.
      */
-    public start: Vector2;
+    public start: Vector;
 
     /**
      * A vector representing the ending vertex of the edge.
      */
-    public end: Vector2;
+    public end: Vector;
 
     /**
      * Constructs an edge with specified starting and ending vertices.
      * @param start A vector representing the starting vertex of the edge.
      * @param end A vector representing the ending vertex of the edge.
      */
-    constructor(start: Vector2, end: Vector2) {
+    constructor(start: Vector, end: Vector) {
         this.start = start;
         this.end = end;
     }
@@ -46,8 +46,8 @@ export class Edge {
      * @param reverse Creates a displacement vector in the opposite direction if true.
      * @returns A displacement vector.
      */
-    public direction(reverse: boolean = false): Vector2 {
-        return Vector2.subtract(this.end, this.start).scale(reverse ? -1 : 1);
+    public direction(reverse: boolean = false): Vector {
+        return Vector.subtract(this.end, this.start).scale(reverse ? -1 : 1);
     }
 
     /**
@@ -55,7 +55,7 @@ export class Edge {
      * @param clockwise Creates a normal vector in the opposite direction.
      * @returns A normal vector.
      */
-    public normal(clockwise: boolean = false): Vector2 {
+    public normal(clockwise: boolean = false): Vector {
         return this.direction(clockwise).normalize().rotate(-Math.PI/2);
     }
 
@@ -83,15 +83,15 @@ export class Edge {
      * @param edge The edge to intersect with this one.
      * @returns The point of intersection if it exists, null otherwise.
      */
-    public intersectEdge(edge: Edge): Vector2 {
-        let p: Vector2 = this.start.copy();
-        let q: Vector2 = edge.start.copy();
-        let r: Vector2 = Vector2.subtract(this.end, p);
-        let s: Vector2 = Vector2.subtract(edge.end, q);
-        let a: Vector2 = Vector2.subtract(q, p);
+    public intersectEdge(edge: Edge): Vector {
+        let p: Vector = this.start.copy();
+        let q: Vector = edge.start.copy();
+        let r: Vector = Vector.subtract(this.end, p);
+        let s: Vector = Vector.subtract(edge.end, q);
+        let a: Vector = Vector.subtract(q, p);
         let b: number = r.cross(s);
-        let t: number = a.cross(Vector2.scale(s, 1/b));
-        let u: number = a.cross(Vector2.scale(r, 1/b));
+        let t: number = a.cross(Vector.scale(s, 1/b));
+        let u: number = a.cross(Vector.scale(r, 1/b));
 
         if (r.cross(s) != 0 && Edge.inRange(t, 0, 1) && Edge.inRange(u, 0, 1)) {
             return p.add(r.scale(t));
@@ -107,6 +107,6 @@ export class Edge {
  * @param end A vector representing the ending vertex of the edge.
  * @returns A new Edge instance.
  */
-export function edge(start: Vector2, end: Vector2): Edge {
+export function edge(start: Vector, end: Vector): Edge {
     return new Edge(start, end);
 }
