@@ -1,10 +1,12 @@
+import { vtx, Vertex } from "./vertex";
+
 /**
  * Describes a vector in 2-dimensional space.
  */
-export class Vector2 {
+export class Vector {
     /**
      * TODO: 
-     *  - Reconsider whether X and y of a Vector2 instance should be outwardly mutable.
+     *  - Reconsider whether X and y of a Vector instance should be outwardly mutable.
      *  - Implement an equivalency method with an in-built adjustable threshold for "roughly" comparing vectors
      */
 
@@ -29,11 +31,11 @@ export class Vector2 {
     }
 
     /**
-     * Creates a new Vector2 object with the same properties of this one.
-     * @returns A new Vector2 object.
+     * Creates a new Vector object with the same properties of this one.
+     * @returns A new Vector object.
      */
-    public copy(): Vector2 {
-        return vec2(this.x, this.y);
+    public copy(): Vector {
+        return vec(this.x, this.y);
     }
 
     /**
@@ -43,6 +45,14 @@ export class Vector2 {
      */
     public toString(): string {
         return `<${(this.x < 0 ? "" : "+") + this.x.toFixed(3)}, ${(this.y < 0 ? "" : "+") + this.y.toFixed(3)}>`;
+    }
+
+    /**
+     * Converts this vector to a vertex with x and y coordinates equal to the vector proportions.
+     * @returns This vector as a vertex.
+     */
+     public toVertex(): Vertex {
+        return vtx(this.x, this.y);
     }
 
     /**
@@ -58,9 +68,9 @@ export class Vector2 {
      * @param angle The angle from the positive x-axis in radians.
      * @returns A unit vector.
      */
-    public static unit(angle: number): Vector2 {
-        let standard = Vector2.standardizeAngle(angle);
-        return vec2(Math.cos(standard), Math.sin(standard));
+    public static unit(angle: number): Vector {
+        let standard = Vector.standardizeAngle(angle);
+        return vec(Math.cos(standard), Math.sin(standard));
     }
 
     /**
@@ -76,7 +86,7 @@ export class Vector2 {
      * @returns The angle in radians.
      */
     public angle(): number {
-        return Vector2.standardizeAngle(Math.atan2(this.y, this.x));
+        return Vector.standardizeAngle(Math.atan2(this.y, this.x));
     }
 
     /**
@@ -84,7 +94,7 @@ export class Vector2 {
      * @param other The vector to calculate the dot product with.
      * @returns The dot product of the two vectors.
      */
-    public dot(other: Vector2): number {
+    public dot(other: Vector): number {
         return this.x * other.x + this.y * other.y;
     }
 
@@ -93,7 +103,7 @@ export class Vector2 {
      * @param other The vector to calculate the cross product with.
      * @returns The magnitude of the cross product of the two vectors.
      */
-    public cross(other: Vector2): number {
+    public cross(other: Vector): number {
         return this.x * other.y - this.y * other.x;
     }
 
@@ -103,8 +113,8 @@ export class Vector2 {
      * @param other The vector the calculate the angle to.
      * @returns The angle in radians.
      */
-    public angleBetween(other: Vector2): number {
-        return Vector2.standardizeAngle(other.angle() - this.angle());
+    public angleBetween(other: Vector): number {
+        return Vector.standardizeAngle(other.angle() - this.angle());
     }
 
     /**
@@ -112,7 +122,7 @@ export class Vector2 {
      * @param other The vector with proportions to add to this one.
      * @returns The sum of the vectors.
      */
-     public add(other: Vector2): Vector2 {
+     public add(other: Vector): Vector {
         this.x += other.x;
         this.y += other.y;
         return this;
@@ -124,7 +134,7 @@ export class Vector2 {
      * @param vectorB The vector to add.
      * @returns The sum of the vectors.
      */
-     public static add(vectorA: Vector2, vectorB: Vector2): Vector2 {
+     public static add(vectorA: Vector, vectorB: Vector): Vector {
         return vectorA.copy().add(vectorB);
     }
 
@@ -133,7 +143,7 @@ export class Vector2 {
      * @param other The vector with proportions to subtract from this one.
      * @returns The difference of the vectors.
      */
-    public subtract(other: Vector2): Vector2 {
+    public subtract(other: Vector): Vector {
         this.x -= other.x;
         this.y -= other.y;
         return this;
@@ -145,7 +155,7 @@ export class Vector2 {
      * @param vectorB The vector to subtract.
      * @returns The difference of the vectors.
      */
-    public static subtract(vectorA: Vector2, vectorB: Vector2): Vector2 {
+    public static subtract(vectorA: Vector, vectorB: Vector): Vector {
         return vectorA.copy().subtract(vectorB);
     }
 
@@ -154,7 +164,7 @@ export class Vector2 {
      * @param factor The amount to scale the vector by.
      * @returns This vector after scaling.
      */
-    public scale(factor: number): Vector2 {
+    public scale(factor: number): Vector {
         this.x *= factor;
         this.y *= factor;
         return this;
@@ -166,7 +176,7 @@ export class Vector2 {
      * @param factor The amount to scale the vector by.
      * @returns A new scaled vector.
      */
-     public static scale(vector: Vector2, factor: number): Vector2 {
+     public static scale(vector: Vector, factor: number): Vector {
         return vector.copy().scale(factor);
     }
 
@@ -174,7 +184,7 @@ export class Vector2 {
      * Normalizes the vector (scales its magnitude to 1).
      * @returns This vector after normalization.
      */
-    public normalize(): Vector2 {
+    public normalize(): Vector {
         let length = this.magnitude();
         if(length == 0) return this;
         this.x /= length;
@@ -187,7 +197,7 @@ export class Vector2 {
      * @param vector The vector to normalize.
      * @returns A new normalized vector.
      */
-     public static normalize(vector: Vector2): Vector2 {
+     public static normalize(vector: Vector): Vector {
         return vector.copy().normalize();
     }
 
@@ -196,7 +206,7 @@ export class Vector2 {
      * @param angle The amount to rotate the vector by in radians.
      * @returns The vector after rotation.
      */
-    public rotate(angle: number): Vector2 {
+    public rotate(angle: number): Vector {
         let cos = Math.cos(angle);
         let sin = Math.sin(angle);
         let x = this.x * cos - this.y * sin;
@@ -211,7 +221,7 @@ export class Vector2 {
      * @param angle The amount to rotate the vector by in radians.
      * @returns A new rotated vector
      */
-     public static rotate(vector: Vector2, angle: number): Vector2 {
+     public static rotate(vector: Vector, angle: number): Vector {
         return vector.copy().rotate(angle);
     }
 
@@ -220,8 +230,8 @@ export class Vector2 {
      * @param axis The axis along which to reflect the vector.
      * @returns The vector after reflection.
      */
-    public reflect(axis: Vector2): Vector2 {
-        let angle = Vector2.standardizeAngle(2*axis.angle());
+    public reflect(axis: Vector): Vector {
+        let angle = Vector.standardizeAngle(2*axis.angle());
         let cos = Math.cos(angle);
         let sin = Math.sin(angle);
         let x = this.x * cos + this.y * sin;
@@ -236,17 +246,17 @@ export class Vector2 {
      * @param axis The axis along which to reflect the vector.
      * @returns A new reflected vector
      */
-     public static reflect(vector: Vector2, axis: Vector2): Vector2 {
+     public static reflect(vector: Vector, axis: Vector): Vector {
         return vector.copy().reflect(axis);
     }
 }
 
 /**
- * Shorthand constructor for a Vector2 object.
+ * Shorthand constructor for a Vector object.
  * @param x The proportion of the vector in the x-dimension, 0 by default.
  * @param y The proportion of the vector in the y-dimension, 0 by default.
- * @returns A new Vector2 instance.
+ * @returns A new Vector instance.
  */
-export function vec2(x: number = 0, y: number = 0): Vector2 {
-    return new Vector2(x, y)
+export function vec(x: number = 0, y: number = 0): Vector {
+    return new Vector(x, y)
 }

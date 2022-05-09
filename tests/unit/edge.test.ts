@@ -1,10 +1,11 @@
 import { edge, Edge } from '../../src/edge'
-import { vec2, Vector2 } from '../../src/vector2';
+import { vec, Vector } from '../../src/vector';
+import { vtx, Vertex } from '../../src/vertex';
 
 describe('Constructor', () => {
     it('should store vertices correctly', () => {
-        let u = vec2(1, 2);
-        let v = vec2(2, 1);
+        let u = vtx(1, 2);
+        let v = vtx(2, 1);
         let e = new Edge(u, v);
 
         expect(e.start).toBe(u);
@@ -14,8 +15,8 @@ describe('Constructor', () => {
 
 describe('Shorthand Constructor', () => {
     it('should store vertices correctly', () => {
-        let u = vec2(1, 2);
-        let v = vec2(2, 1);
+        let u = vtx(1, 2);
+        let v = vtx(2, 1);
         let e = edge(u, v);
 
         expect(e.start).toBe(u);
@@ -25,8 +26,8 @@ describe('Shorthand Constructor', () => {
 
 describe('Copy', () => {
     it('should return an edge with equivalent start and end vectors', () => {
-        let u = vec2(1, 2);
-        let v = vec2(2, 1);
+        let u = vtx(1, 2);
+        let v = vtx(2, 1);
         let e0 = edge(u, v);
         let e1 = e0.copy();
 
@@ -37,8 +38,8 @@ describe('Copy', () => {
     });
 
     it('should return a distinctly different vector instance', () => {
-        let u = vec2(1, 2);
-        let v = vec2(2, 1);
+        let u = vtx(1, 2);
+        let v = vtx(2, 1);
         let e0 = edge(u, v);
         let e1 = e0.copy();
 
@@ -50,17 +51,17 @@ describe('Copy', () => {
 });
 
 describe('Direction', () => {
-    type TestObject = { edge: Edge, reverse: boolean, direction: Vector2 };
+    type TestObject = { edge: Edge, reverse: boolean, direction: Vector };
 
     let cases: TestObject[] = [
-        { edge: edge(vec2(0, 0), vec2(0, 0)), reverse: false, direction: vec2(0, 0) },
-        { edge: edge(vec2(0, 0), vec2(0, 0)), reverse: true, direction: vec2(0, 0) },
-        { edge: edge(vec2(0, 0), vec2(1, 1)), reverse: false, direction: vec2(1, 1) },
-        { edge: edge(vec2(0, 0), vec2(1, 1)), reverse: true, direction: vec2(-1, -1) },
-        { edge: edge(vec2(2, 3), vec2(-5, 8)), reverse: false, direction: vec2(-7, 5) },
-        { edge: edge(vec2(2, 3), vec2(-5, 8)), reverse: true, direction: vec2(7, -5) },
-        { edge: edge(vec2(-1, -4), vec2(4, 3)), reverse: false, direction: vec2(5, 7) },
-        { edge: edge(vec2(-1, -4), vec2(4, 3)), reverse: true, direction: vec2(-5, -7) },
+        { edge: edge(vtx(0, 0), vtx(0, 0)), reverse: false, direction: vec(0, 0) },
+        { edge: edge(vtx(0, 0), vtx(0, 0)), reverse: true, direction: vec(0, 0) },
+        { edge: edge(vtx(0, 0), vtx(1, 1)), reverse: false, direction: vec(1, 1) },
+        { edge: edge(vtx(0, 0), vtx(1, 1)), reverse: true, direction: vec(-1, -1) },
+        { edge: edge(vtx(2, 3), vtx(-5, 8)), reverse: false, direction: vec(-7, 5) },
+        { edge: edge(vtx(2, 3), vtx(-5, 8)), reverse: true, direction: vec(7, -5) },
+        { edge: edge(vtx(-1, -4), vtx(4, 3)), reverse: false, direction: vec(5, 7) },
+        { edge: edge(vtx(-1, -4), vtx(4, 3)), reverse: true, direction: vec(-5, -7) },
     ];
 
     cases.forEach(testCase => {
@@ -73,8 +74,8 @@ describe('Direction', () => {
     });
 
     it('should not reverse direction by default', () => {
-        let u = vec2(1, 2);
-        let v = vec2(2, 1);
+        let u = vtx(1, 2);
+        let v = vtx(2, 1);
         let e = edge(u, v);
 
         let d0 = e.direction();
@@ -86,17 +87,17 @@ describe('Direction', () => {
 });
 
 describe('Normal', () => {
-    type TestObject = { edge: Edge, clockwise: boolean, normal: Vector2 };
+    type TestObject = { edge: Edge, clockwise: boolean, normal: Vector };
 
     let cases: TestObject[] = [
-        { edge: edge(vec2(0, 0), vec2(0, 0)), clockwise: false, normal: vec2(0, 0) },
-        { edge: edge(vec2(0, 0), vec2(0, 0)), clockwise: true, normal: vec2(0, 0) },
-        { edge: edge(vec2(0, 0), vec2(1, 1)), clockwise: false, normal: vec2(1/(2**0.5), -1/(2**0.5)) },
-        { edge: edge(vec2(0, 0), vec2(1, 1)), clockwise: true, normal: vec2(-1/(2**0.5), 1/(2**0.5)) },
-        { edge: edge(vec2(2, 3), vec2(-1, 7)), clockwise: false, normal: vec2(4/5, 3/5) },
-        { edge: edge(vec2(2, 3), vec2(-1, 7)), clockwise: true, normal: vec2(-4/5, -3/5) },
-        { edge: edge(vec2(-1, -4), vec2(3, -1)), clockwise: false, normal: vec2(3/5, -4/5) },
-        { edge: edge(vec2(-1, -4), vec2(3, -1)), clockwise: true, normal: vec2(-3/5, 4/5) },
+        { edge: edge(vtx(0, 0), vtx(0, 0)), clockwise: false, normal: vec(0, 0) },
+        { edge: edge(vtx(0, 0), vtx(0, 0)), clockwise: true, normal: vec(0, 0) },
+        { edge: edge(vtx(0, 0), vtx(1, 1)), clockwise: false, normal: vec(1/(2**0.5), -1/(2**0.5)) },
+        { edge: edge(vtx(0, 0), vtx(1, 1)), clockwise: true, normal: vec(-1/(2**0.5), 1/(2**0.5)) },
+        { edge: edge(vtx(2, 3), vtx(-1, 7)), clockwise: false, normal: vec(4/5, 3/5) },
+        { edge: edge(vtx(2, 3), vtx(-1, 7)), clockwise: true, normal: vec(-4/5, -3/5) },
+        { edge: edge(vtx(-1, -4), vtx(3, -1)), clockwise: false, normal: vec(3/5, -4/5) },
+        { edge: edge(vtx(-1, -4), vtx(3, -1)), clockwise: true, normal: vec(-3/5, 4/5) },
     ];
 
     cases.forEach(testCase => {
@@ -109,8 +110,8 @@ describe('Normal', () => {
     });
 
     it('should not assume counter-clockwise edge by default', () => {
-        let u = vec2(1, 2);
-        let v = vec2(2, 1);
+        let u = vtx(1, 2);
+        let v = vtx(2, 1);
         let e = edge(u, v);
 
         let n0 = e.normal();
@@ -125,10 +126,10 @@ describe('Length', () => {
     type TestObject = { edge: Edge, length: number };
 
     let cases: TestObject[] = [
-        { edge: edge(vec2(0, 0), vec2(0, 0)), length: 0 },
-        { edge: edge(vec2(0, 0), vec2(1, 1)), length: 2 ** 0.5 },
-        { edge: edge(vec2(-1, -3), vec2(2, 1)), length: 5 },
-        { edge: edge(vec2(3, -6), vec2(-2, 6)), length: 13 },
+        { edge: edge(vtx(0, 0), vtx(0, 0)), length: 0 },
+        { edge: edge(vtx(0, 0), vtx(1, 1)), length: 2 ** 0.5 },
+        { edge: edge(vtx(-1, -3), vtx(2, 1)), length: 5 },
+        { edge: edge(vtx(3, -6), vtx(-2, 6)), length: 13 },
     ];
 
     cases.forEach(testCase => {
@@ -141,15 +142,15 @@ describe('Length', () => {
 });
 
 describe('Intersect Edge', () => {
-    type TestObject = { edgeA: Edge, edgeB: Edge, intersect: Vector2 };
+    type TestObject = { edgeA: Edge, edgeB: Edge, intersect: Vertex };
 
     let cases: TestObject[] = [
-        {edgeA: edge(vec2(0, 0), vec2(0, 0)), edgeB: edge(vec2(0, 0), vec2(0, 0)), intersect: null},
-        {edgeA: edge(vec2(-1, -1), vec2(1, 1)), edgeB: edge(vec2(-1, 1), vec2(1, -1)), intersect: vec2(0,0)},
-        {edgeA: edge(vec2(-2, 0), vec2(4, 2)), edgeB: edge(vec2(-1, -3), vec2(2, 3)), intersect: vec2(1,1)},
-        {edgeA: edge(vec2(-2, 0), vec2(4, 2)), edgeB: edge(vec2(-1, -3), vec2(0, -1)), intersect: null},
-        {edgeA: edge(vec2(-2, 0), vec2(4, 2)), edgeB: edge(vec2(-2, -1), vec2(4, 1)), intersect: null},
-        {edgeA: edge(vec2(-2, 0), vec2(4, 2)), edgeB: edge(vec2(-2, 0), vec2(4, 2)), intersect: null},
+        {edgeA: edge(vtx(0, 0),   vtx(0, 0)), edgeB: edge(vtx(0, 0),   vtx(0, 0)), intersect: null},
+        {edgeA: edge(vtx(-1, -1), vtx(1, 1)), edgeB: edge(vtx(-1, 1),  vtx(1, -1)), intersect: vtx(0,0)},
+        {edgeA: edge(vtx(-2, 0),  vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(2, 3)), intersect: vtx(1,1)},
+        {edgeA: edge(vtx(-2, 0),  vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(0, -1)), intersect: null},
+        {edgeA: edge(vtx(-2, 0),  vtx(4, 2)), edgeB: edge(vtx(-2, -1), vtx(4, 1)), intersect: null},
+        {edgeA: edge(vtx(-2, 0),  vtx(4, 2)), edgeB: edge(vtx(-2, 0),  vtx(4, 2)), intersect: null},
     ];
 
     cases.forEach(testCase => {

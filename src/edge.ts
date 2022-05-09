@@ -1,25 +1,26 @@
-import { Vector2 } from './vector2'
+import { Vertex } from './vertex'
+import { Vector } from './vector'
 
 /**
  * A polygonal edge in 2-dimensional space, effectively a line segment.
  */
 export class Edge {
     /**
-     * A vector representing the starting vertex of the edge.
+     * The starting vertex of the edge.
      */
-    public start: Vector2;
+    public start: Vertex;
 
     /**
-     * A vector representing the ending vertex of the edge.
+     * The ending vertex of the edge.
      */
-    public end: Vector2;
+    public end: Vertex;
 
     /**
      * Constructs an edge with specified starting and ending vertices.
-     * @param start A vector representing the starting vertex of the edge.
-     * @param end A vector representing the ending vertex of the edge.
+     * @param start A vertex representing the starting vertex of the edge.
+     * @param end A vertex representing the ending vertex of the edge.
      */
-    constructor(start: Vector2, end: Vector2) {
+    constructor(start: Vertex, end: Vertex) {
         this.start = start;
         this.end = end;
     }
@@ -34,7 +35,7 @@ export class Edge {
 
     /**
      * Creates a user-friendly formatted string for the edge. Elements are contained in parenthesis, separated by 
-     * commas and formatted as user-friendly vectors.
+     * commas and formatted as user-friendly vertices.
      * @returns A formatted string representing the edge.
      */
     public toString(): string {
@@ -46,8 +47,8 @@ export class Edge {
      * @param reverse Creates a displacement vector in the opposite direction if true.
      * @returns A displacement vector.
      */
-    public direction(reverse: boolean = false): Vector2 {
-        return Vector2.subtract(this.end, this.start).scale(reverse ? -1 : 1);
+    public direction(reverse: boolean = false): Vector {
+        return Vector.subtract(this.end.toVector(), this.start.toVector()).scale(reverse ? -1 : 1);
     }
 
     /**
@@ -55,7 +56,7 @@ export class Edge {
      * @param clockwise Creates a normal vector in the opposite direction.
      * @returns A normal vector.
      */
-    public normal(clockwise: boolean = false): Vector2 {
+    public normal(clockwise: boolean = false): Vector {
         return this.direction(clockwise).normalize().rotate(-Math.PI/2);
     }
 
@@ -83,18 +84,18 @@ export class Edge {
      * @param edge The edge to intersect with this one.
      * @returns The point of intersection if it exists, null otherwise.
      */
-    public intersectEdge(edge: Edge): Vector2 {
-        let p: Vector2 = this.start.copy();
-        let q: Vector2 = edge.start.copy();
-        let r: Vector2 = Vector2.subtract(this.end, p);
-        let s: Vector2 = Vector2.subtract(edge.end, q);
-        let a: Vector2 = Vector2.subtract(q, p);
+    public intersectEdge(edge: Edge): Vertex {
+        let p: Vector = this.start.toVector();
+        let q: Vector = edge.start.toVector();
+        let r: Vector = Vector.subtract(this.end.toVector(), p);
+        let s: Vector = Vector.subtract(edge.end.toVector(), q);
+        let a: Vector = Vector.subtract(q, p);
         let b: number = r.cross(s);
-        let t: number = a.cross(Vector2.scale(s, 1/b));
-        let u: number = a.cross(Vector2.scale(r, 1/b));
+        let t: number = a.cross(Vector.scale(s, 1/b));
+        let u: number = a.cross(Vector.scale(r, 1/b));
 
         if (r.cross(s) != 0 && Edge.inRange(t, 0, 1) && Edge.inRange(u, 0, 1)) {
-            return p.add(r.scale(t));
+            return p.add(r.scale(t)).toVertex();
         }
         
         return null;
@@ -103,10 +104,10 @@ export class Edge {
 
 /**
  * Shorthand constructor for an Edge object.
- * @param start A vector representing the starting vertex of the edge.
- * @param end A vector representing the ending vertex of the edge.
+ * @param start The starting vertex of the edge.
+ * @param end The ending vertex of the edge.
  * @returns A new Edge instance.
  */
-export function edge(start: Vector2, end: Vector2): Edge {
+export function edge(start: Vertex, end: Vertex): Edge {
     return new Edge(start, end);
 }

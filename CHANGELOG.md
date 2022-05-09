@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2022-05-10
+
+### Added
+
+- Added the `Vertex` class with tests, minimal API documentation and support for the following operations (the purpose of this class differs from the existing `Vector` class mostly from a conceptual stand point):
+  - Shorthand construction
+  - Copying
+  - Log formatting
+  - Vertex translation
+  - Vertex scaling
+  - Vertex rotation
+  - Vertex reflection
+  - Distance calculation
+  - Angle calculation
+- Added conversion methods to convert between `Vertex` and `Vector` classes.
+
+### Changed
+- Renamed `Vector2` class to `Vector`. There is no need to specify the 2 (for two-dimensions) when the library is inherently two-dimensional.
+- Replaced use of `Vector` in `Edge` with `Vertex`.
+
 ## [0.2.0] - 2022-05-08
 
 ### Added
