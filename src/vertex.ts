@@ -1,4 +1,4 @@
-import { Vector } from "./vector";
+import { vec, Vector } from "./vector";
 
 /**
  * A vertex (or point) in two dimensional space.
@@ -29,7 +29,7 @@ export class Vertex {
      * @returns A new Vertex object.
      */
     public copy(): Vertex {
-        return null;
+        return vtx(this.x, this.y);
     }
 
     /**
@@ -42,13 +42,24 @@ export class Vertex {
     }
 
     /**
+     * Converts this vertex to a vector with x and y proportions equal to the vertex coordinates.
+     * @returns This vertex as a vector.
+     */
+    public toVector(): Vector {
+        return vec(this.x, this.y);
+    }
+
+    /**
      * Translates the vertex by some amount along both axes.
      * @param x The translation along the x-axis, 0 by default.
      * @param y The translation along the y-axis, 0 by default.
      * @returns The vertex after translation.
      */
     public translate(x: number = 0, y: number = 0): Vertex {
-        return null;
+        let translated = Vertex.translate(this, x, y);
+        this.x = translated.x;
+        this.y = translated.y;
+        return this; 
     }
 
     /**
@@ -59,7 +70,7 @@ export class Vertex {
      * @returns A new translated vertex.
      */
     public static translate(vertex: Vertex, x: number = 0, y: number = 0): Vertex {
-        return null;
+        return vertex.toVector().add(vec(x, y)).toVertex();
     }
 
     /**
@@ -69,7 +80,10 @@ export class Vertex {
      * @returns The vertex after scaling.
      */
     public scale(factor: number, control: Vertex = null): Vertex {
-        return null;
+        let scaled = Vertex.scale(this, factor, control);
+        this.x = scaled.x;
+        this.y = scaled.y;
+        return this;
     }
 
     /**
@@ -80,7 +94,8 @@ export class Vertex {
      * @returns A new scaled vertex.
      */
     public static scale(vertex: Vertex, factor: number, control: Vertex = null): Vertex {
-        return null;
+        let controlVec = control ? control.toVector() : vec(0, 0);
+        return controlVec.add(vertex.toVector().subtract(controlVec).scale(factor)).toVertex();
     }
 
     /**
@@ -90,7 +105,10 @@ export class Vertex {
      * @returns The vertex after rotation.
      */
     public rotate(angle: number, control: Vertex = null): Vertex {
-        return null;
+        let rotated = Vertex.rotate(this, angle, control);
+        this.x = rotated.x;
+        this.y = rotated.y;
+        return this;
     }
 
     /**
@@ -101,7 +119,8 @@ export class Vertex {
      * @returns A new rotated vertex.
      */
     public static rotate(vertex: Vertex, angle: number, control: Vertex = null): Vertex {
-        return null;
+        let controlVec = control ? control.toVector() : vec(0, 0);
+        return controlVec.add(vertex.toVector().subtract(controlVec).rotate(angle)).toVertex();
     }
 
     /**
@@ -111,7 +130,10 @@ export class Vertex {
      * @returns The vertex after reflection.
      */
     public reflect(axis: Vector, control: Vertex = null): Vertex {
-        return null;
+        let reflected = Vertex.reflect(this, axis, control);
+        this.x = reflected.x;
+        this.y = reflected.y;
+        return this;
     }
 
     /**
@@ -122,7 +144,10 @@ export class Vertex {
      * @returns A new reflected vertex.
      */
     public static reflect(vertex: Vertex, axis: Vector, control: Vertex = null): Vertex {
-        return null;
+        let controlVec = control ? control.toVector() : vec(0, 0);
+        return axis.magnitude() > 0
+            ? controlVec.add(vertex.toVector().subtract(controlVec).reflect(axis)).toVertex()
+            : vertex.copy();
     }
 
     /**
@@ -131,7 +156,7 @@ export class Vertex {
      * @returns The distance to the other vertex.
      */
     public distanceTo(vertex: Vertex): number {
-        return 0;
+        return Vertex.distanceBetween(this, vertex);
     }
 
     /**
@@ -141,7 +166,7 @@ export class Vertex {
      * @returns The distance between the vertices.
      */
     public static distanceBetween(vertexA: Vertex, vertexB: Vertex): number {
-        return 0;
+        return vertexB.toVector().subtract(vertexA.toVector()).magnitude();
     }
 
     /**
@@ -151,7 +176,7 @@ export class Vertex {
      * @returns The angle to the other vertex.
      */
     public angleTo(vertex: Vertex, heading: number): number {
-        return 0;
+        return Vertex.angleBetween(this, vertex, heading);
     }
 
     /**
@@ -162,8 +187,9 @@ export class Vertex {
      * @returns The angle between the vertices.
      */
     public static angleBetween(vertexA: Vertex, vertexB: Vertex, heading: number): number {
-        return 0;
-    }   
+        let fullAngle = Vector.unit(heading).angleBetween(vertexB.toVector().subtract(vertexA.toVector()));
+        return fullAngle > Math.PI ? -(Math.PI - (fullAngle % Math.PI)) : fullAngle;
+    }
 }
 
 /**

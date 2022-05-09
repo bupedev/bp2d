@@ -1,3 +1,5 @@
+import { vtx, Vertex } from "./vertex";
+
 /**
  * Describes a vector in 2-dimensional space.
  */
@@ -43,6 +45,14 @@ export class Vector {
      */
     public toString(): string {
         return `<${(this.x < 0 ? "" : "+") + this.x.toFixed(3)}, ${(this.y < 0 ? "" : "+") + this.y.toFixed(3)}>`;
+    }
+
+    /**
+     * Converts this vector to a vertex with x and y coordinates equal to the vector proportions.
+     * @returns This vector as a vertex.
+     */
+     public toVertex(): Vertex {
+        return vtx(this.x, this.y);
     }
 
     /**
