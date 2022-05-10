@@ -7,7 +7,8 @@
     "all": "npm run build && npm run tests && npm run docs",
     "clean": "shx rm -rf _bundles lib lib-esm",
     "build": "npm run clean && tsc && tsc -m es6 --outDir lib-esm && webpack",
-    "tests": "jest --coverage --verbose",
+    "tests-unit": "jest --coverage --verbose",
+    "tests-integration": "live-server tests/integration",
     "docs": "npx typedoc --excludePrivate --githubPages false --out docs src/index.ts"
   },
   "author": "Ben Lewis <ben@bupe.dev>",
@@ -20,6 +21,7 @@
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.30",
     "@types/p5": "^1.4.2",
+    "live-server": "^1.2.2",
     "p5": "^1.4.1",
     "shx": "^0.3.4",
     "terser-webpack-plugin": "^5.3.1",
