@@ -1,4 +1,4 @@
-import { vec, Vector } from '../../src/vector'
+import { vec, Vector } from '../../../src/index';
 
 describe('Constructor', () => {
     it('should default all proportions to 0', () => {

@@ -1,6 +1,7 @@
 import { edge, Edge } from "./edge"
 import { Vector } from "./vector"
 import { Vertex } from "./vertex";
+import { mod } from "./../utility/numerics"
 
 /**
  * A polygon in two dimensional space.
@@ -225,11 +226,11 @@ export class Polygon {
                         let target = polygon._edges[tj];
                         let intersection = base.intersectEdge(target);
                         if (intersection && !(intersection.isEquivalentTo(base.end) || intersection.isEquivalentTo(base.start))) {
-                            let modifiedVertices = polygon._vertices.filter((vertex, index) => !subIndices.includes(index));
+                            let modifiedVertices = polygon._vertices.filter((_, index) => !subIndices.includes(index));
                             modifiedVertices.splice(i + 1, 0, intersection);
                             subPolygons[p] = poly(modifiedVertices);
 
-                            let createdVertices = polygon._vertices.filter((vertex, index) => subIndices.includes(index));
+                            let createdVertices = polygon._vertices.filter((_, index) => subIndices.includes(index));
                             createdVertices.push(intersection);
                             subPolygons.push(poly(createdVertices));
                             resolved.push(false);
@@ -256,7 +257,7 @@ export class Polygon {
     }
 
     /**
-     * Offests the edges of the polygon orthogonally by some quantity.  Depending on the structure of the polygon and the offset 
+     * Offsets the edges of the polygon orthogonally by some quantity.  Depending on the structure of the polygon and the offset 
      * amount it is entirely for the polygon to be separated into two or more distinct polygons.
      * @param quantity The amount to offset the polygon edges. A positive value will shift the polygon edges away from the 
      *                 centre, while a negative value will shift the polygon edges toward the centre.
@@ -276,11 +277,6 @@ export class Polygon {
         let splitSegments = poly(rawOffsetVertices).overlapSplit();
         return splitSegments.filter((segment) => segment.clockwise == this.clockwise);
     }
-}
-
-// Put this in a common place, I don't think this is the only time it will be desired...
-function mod(x: number, m: number): number {
-    return ((x % m) + m) % m;
 }
 
 export function poly(vertices: Vertex[]): Polygon {

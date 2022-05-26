@@ -1,5 +1,6 @@
 import { Vertex } from './vertex'
 import { Vector } from './vector'
+import { inRange } from './../utility/numerics'
 
 /**
  * A polygonal edge in 2-dimensional space, effectively a line segment.
@@ -69,17 +70,6 @@ export class Edge {
     }
 
     /**
-     * Determines whether some number is within a range defined by two bounding numbers.
-     * @param target The number to check the range for.
-     * @param lower The lower bound of the range.
-     * @param upper The upper bound of the range.
-     * @returns True if the number is within the range, false othewise.
-     */
-    private static inRange(target: number, lower: number, upper: number): boolean {
-        return lower <= target && target <= upper;
-    }
-
-    /**
      * Calculates the point of intersection between this and another edge.
      * @param edge The edge to intersect with this one.
      * @returns The point of intersection if it exists, null otherwise.
@@ -94,7 +84,7 @@ export class Edge {
         let t: number = a.cross(Vector.scale(s, 1/b));
         let u: number = a.cross(Vector.scale(r, 1/b));
 
-        if (r.cross(s) != 0 && Edge.inRange(t, 0, 1) && Edge.inRange(u, 0, 1)) {
+        if (r.cross(s) != 0 && inRange(t, 0, 1) && inRange(u, 0, 1)) {
             return p.add(r.scale(t)).toVertex();
         }
         

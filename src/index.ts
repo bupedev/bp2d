@@ -1,11 +1,15 @@
-import { vec, Vector } from './vector';
-import { vtx, Vertex } from './vertex';
-import { edge, Edge } from './edge';
-import { poly, Polygon } from './polygon';
+import { vec, Vector } from './geometry/vector';
+import { vtx, Vertex } from './geometry/vertex';
+import { edge, Edge } from './geometry/edge';
+import { poly, Polygon } from './geometry/polygon';
 
 export { 
-    vec, Vector, 
-    vtx, Vertex, 
-    edge, Edge,
-    poly, Polygon
+    Vector, 
+    Vertex, 
+    Edge,
+    Polygon,
+    vec,
+    vtx,
+    poly,
+    edge
 };

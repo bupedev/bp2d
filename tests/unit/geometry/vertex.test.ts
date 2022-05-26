@@ -1,5 +1,4 @@
-import { vec, Vector } from '../../src/vector';
-import { vtx, Vertex } from '../../src/vertex'
+import { vec, Vector, vtx, Vertex } from '../../../src/index';
 
 describe('Constructor', () => {
     it('should default all dimensions to 0', () => {

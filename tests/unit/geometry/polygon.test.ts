@@ -1,7 +1,4 @@
-import { vec, Vector } from '../../src/vector';
-import { vtx, Vertex } from '../../src/vertex';
-import { edge, Edge } from '../../src/edge';
-import { poly, Polygon } from '../../src/polygon';
+import { Polygon, poly, Edge, edge, Vertex, vtx, Vector, vec } from '../../../src/index';
 
 function expectPolygonEquivalency(actual: Polygon, expected: Polygon): void {
     expect(actual.vertices.length).toBe(expected.vertices.length);
