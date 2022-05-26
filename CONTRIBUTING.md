@@ -1,4 +1,4 @@
-# Contributing to bp2d.js
+# Contributing to `gactk`
 To date, this project is mainly serves as an exercise for @bupedev to learn about Typescript/Javascript libraries. However, if you would like to be involved you are more than welcome to do so. You are welcome to do any of the following at your own discretion:
 
 - Reporting a bug
@@ -10,7 +10,7 @@ To date, this project is mainly serves as an exercise for @bupedev to learn abou
 ## Checking-in Code
 We use Github to host code, to track issues and feature requests, as well as accept pull requests. Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow)).
 ## GitHub Issues
-We use [GitHub issues](https://github.com/bupedev/bp2d/issues) to track public bugs and enhancement request. If there are any bugs you wish to report or enhancement requests you would like to raise, you can do so by [opening a new issue](https://github.com/bupedev/bp2d/issues/new).
+We use [GitHub issues](https://github.com/bupedev/gactk/issues) to track public bugs and enhancement request. If there are any bugs you wish to report or enhancement requests you would like to raise, you can do so by [opening a new issue](https://github.com/bupedev/gactk/issues/new).
 
 ## Bug Reports
 It's really important to gice as much context around a bug as you can. Without sufficient clear information, a lot of time can be wasted analysing potential defects. If you have a bug/defect to report, do your best to include the following:

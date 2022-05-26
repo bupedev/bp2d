@@ -10,14 +10,14 @@ var PATHS = {
 var config = {
     mode: 'none',
     entry: {
-        'bp2d': [PATHS.entryPoint],
-        'bp2d.min': [PATHS.entryPoint]
+        'gactk': [PATHS.entryPoint],
+        'gactk.min': [PATHS.entryPoint]
     },
     output: {
         path: PATHS.bundles,
         filename: '[name].js',
         libraryTarget: 'umd',
-        library: 'bp2d',
+        library: 'gactk',
         umdNamedDefine: false
     },
     resolve: {

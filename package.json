@@ -1,7 +1,7 @@
 {
-  "name": "bp2d",
-  "version": "0.3.0",
-  "description": "A UMD geometry library written in Typescript ",
+  "name": "gactk",
+  "version": "0.3.1",
+  "description": "A UMD Typescript library for generative art utilities",
   "main": "index.js",
   "scripts": {
     "all": "npm run build && npm run tests && npm run docs",
@@ -12,7 +12,7 @@
   },
   "author": "Ben Lewis <ben@bupe.dev>",
   "license": "MIT",
-  "repository": "bupedev/bp2d",
+  "repository": "bupedev/gactk",
   "exports": {
     ".": "./lib/index.js"
   },
