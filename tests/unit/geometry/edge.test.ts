@@ -1,6 +1,4 @@
-import { edge, Edge } from '../../src/edge'
-import { vec, Vector } from '../../src/vector';
-import { vtx, Vertex } from '../../src/vertex';
+import { vec, Vector, vtx, Vertex, edge, Edge } from '../../../src/index';
 
 describe('Constructor', () => {
     it('should store vertices correctly', () => {

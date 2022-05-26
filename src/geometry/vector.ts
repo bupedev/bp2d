@@ -5,12 +5,6 @@ import { vtx, Vertex } from "./vertex";
  */
 export class Vector {
     /**
-     * TODO: 
-     *  - Reconsider whether X and y of a Vector instance should be outwardly mutable.
-     *  - Implement an equivalency method with an in-built adjustable threshold for "roughly" comparing vectors
-     */
-
-    /**
      * The proportion of the vector in the x-dimension.
      */
     public x: number;

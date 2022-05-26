@@ -1,5 +1,4 @@
-import { vec, Vector } from '../../src/vector';
-import { vtx, Vertex } from '../../src/vertex'
+import { vec, Vector, vtx, Vertex } from '../../../src/index';
 
 describe('Constructor', () => {
     it('should default all dimensions to 0', () => {
@@ -429,3 +428,22 @@ describe('Angle', () => {
         });
     });
 });
+
+describe('Equivalency', () => {
+    type TestObject = { vertexA: Vertex, vertexB: Vertex, equivalent: boolean };
+
+    let cases: TestObject[] = [
+        { vertexA: vtx(0, 0), vertexB: vtx(0, 0), equivalent: true },
+        { vertexA: vtx(0, 0), vertexB: vtx(1E-9, 1E-9), equivalent: false },
+        { vertexA: vtx(0, 0), vertexB: vtx(1E-9 - 1E-10, 1E-9 - 1E-10), equivalent: true },
+    ];
+
+    cases.forEach(testCase => {
+        let vertexA = testCase.vertexA.copy(), vertexB = testCase.vertexB.copy(), equivalent = testCase.equivalent;
+        it(`should be ${equivalent} when the vertices are ${vertexA} and ${vertexB} (instance)`, () => {
+            let e = vertexA.isEquivalentTo(vertexB);
+            expect(e).toBe(equivalent);
+        });
+    });
+});
+
