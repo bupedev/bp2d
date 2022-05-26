@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2022-05-10
+
+### Added
+
+- Added the `Polygon` class with tests, minimal API documentation and support for the following operations:
+  - Shorthand construction
+  - Copying
+  - Log formatting
+  - Edge intersections
+  - Polygon translation
+  - Polygon scaling
+  - Polygon rotation
+  - Polygon reflection
+  - Self overlap splitting
+  - Edge offsetting
+- Added equivalency based comparison to the `Vertex` class.
+
 ## [0.2.1] - 2022-05-10
 
 ### Added
