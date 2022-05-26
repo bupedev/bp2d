@@ -1,7 +1,7 @@
-# bp2d.js - Bupé's Polygon 2D Library
+# `gactk` - Generative Art Creators Toolkit
 
-![npm](https://img.shields.io/npm/v/bp2d?style=flat-square)
+![npm](https://img.shields.io/npm/v/gactk)
 
-bp2d.js is a UMD geometry library written in Typescript. The library aims to provide a feature rich API for creating and manipulating geometric objects.
+Not be confused with the Japanese musician [GACKT](https://en.wikipedia.org/wiki/Gackt), `gactk` is a UMD Typescript library that aims to provide several feature rich utilities for creating generative art.
 
-The project is awaiting implementation. When there is something substantial and the library is suitable for consumption by others, it will be published as a npm package and usage instructions will be added.
+The project is still in it's infancy, and currently is limited to some simple geometric modeling (vectors, edges polygons, etc.). Please see [here](https://bupedev.github.io/gactk/) for the full API documentation.
