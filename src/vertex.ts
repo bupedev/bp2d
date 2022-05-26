@@ -5,6 +5,13 @@ import { vec, Vector } from "./vector";
  */
 export class Vertex {
     /**
+     * The precision threshold for comparing vertices. If the difference in axis coordinates between two vertices are both less 
+     * than this value, they are considered to be equivalent. This is to mitigate small error margins that are to be expected for 
+     * floating point operations.
+     */
+    public static PRECISION_THRESHOLD: number = 1E-9;
+
+    /**
      * The x-coordinate of the vertex.
      */
     public x: number;
@@ -180,6 +187,17 @@ export class Vertex {
     }
 
     /**
+     * Determines whether this vertex is equivalent to another vertex. Vertices are considered equivalent if the difference in 
+     * their axis coordinates are both less than the PRECISION_THRESHOLD set for the Vertex class.
+     * @param vertex The vertex to compare to this one.
+     * @returns True if the this vertex is equivalent to the other vertex, false otherwise.
+     */
+    public isEquivalentTo(vertex: Vertex): Boolean {
+        return Math.abs(this.x - vertex.x) < Vertex.PRECISION_THRESHOLD && 
+               Math.abs(this.y - vertex.y) < Vertex.PRECISION_THRESHOLD;
+    }
+
+    /**
      * Calculates the angle between two vertices.
      * @param vertexA The first vertex.
      * @param vertexB The second vertex.
@@ -189,6 +207,22 @@ export class Vertex {
     public static angleBetween(vertexA: Vertex, vertexB: Vertex, heading: number): number {
         let fullAngle = Vector.unit(heading).angleBetween(vertexB.toVector().subtract(vertexA.toVector()));
         return fullAngle > Math.PI ? -(Math.PI - (fullAngle % Math.PI)) : fullAngle;
+    }
+
+    /**
+     * Calculates the arithmetic mean vertex of a collection of vertices.
+     * @param vertices The vertices to calculate the arithmetic mean for as an array.
+     * @returns The arithmetic mean vertex of the vertices.
+     */
+    public static mean(vertices: Vertex[]): Vertex {
+        let vertexCount = vertices.length;
+        let xSum = 0;
+        let ySum = 0;
+        for (let i = 0; i < vertexCount; i++) {
+            xSum += vertices[i].x;
+            ySum += vertices[i].y;
+        }
+        return vtx(xSum / vertexCount, ySum / vertexCount);
     }
 }
 
