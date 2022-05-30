@@ -2,7 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.0] - 2022-05-10
+## [0.3.2] - 2022-05-30
+
+### Added
+
+- Added the `CategoricalVariable` class with tests, minimal API documentation and support for the following operations:
+  - Constructing a simple categorical variable with non-normalized weightings.
+  - Retrieve normalized category weightings.
+  - Retrieve categories from normalized values (can be used for randomly selecting categories).
+
+## [0.3.1] - 2022-05-26
+
+### Changed
+
+- Restructured project code hierarchy
+- Renamed project from `bp2d` to `gactk`. The scope of the project has increased from a simple polygon library to a generalized toolkit to make creating generative art a little more streamlined.
+
+## [0.3.0] - 2022-05-26
 
 ### Added
 
