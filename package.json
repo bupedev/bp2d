@@ -1,6 +1,6 @@
 {
   "name": "gactk",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A UMD Typescript library for generative art utilities",
   "main": "index.js",
   "scripts": {
