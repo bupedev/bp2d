@@ -128,7 +128,7 @@ describe('Vertices Accessor', () => {
         expect(storedB[0]).not.toBe(storedA[0]);
     });
 
-    it('should return a copy of the vertices', () => {
+    it('should return a distinct instance of the vertices', () => {
         let vertices = testVertices.square.slice();
 
         let polygon = new Polygon(vertices);
