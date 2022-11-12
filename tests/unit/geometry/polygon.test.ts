@@ -328,41 +328,57 @@ describe('Translate', () => {
 });
 
 describe('Scale', () => {
-    type TestObject = { polygon: Polygon, factor: number, reference: Vertex, scaled: Polygon };
+    type TestObject = { polygon: Polygon, factor: number, reference: Vertex | undefined, scaled: Polygon };
 
     let cases: TestObject[] = [
-        {polygon: poly(testVertices.square), factor: 1, reference: null, scaled: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), factor: 2, reference: null, scaled: poly([vtx(2, 2), vtx(2, -2), vtx(-2, -2), vtx(-2, 2)])},
-        {polygon: poly(testVertices.square), factor: 0.5, reference: null, scaled: poly([vtx(0.5, 0.5), vtx(0.5, -0.5), vtx(-0.5, -0.5), vtx(-0.5, 0.5)])},
-        {polygon: poly(testVertices.square), factor: 0, reference: null, scaled: poly([vtx(0, 0), vtx(0, 0), vtx(0, 0), vtx(0, 0)])},
-        {polygon: poly(testVertices.square), factor: 1, reference: vtx(1, 1), scaled: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), factor: 2, reference: vtx(1, 1), scaled: poly([vtx(1, 1), vtx(1, -3), vtx(-3, -3), vtx(-3, 1)])},
-        {polygon: poly(testVertices.square), factor: 0.5, reference: vtx(1, 1), scaled: poly([vtx(1, 1), vtx(1, 0), vtx(0, 0), vtx(0, 1)])},
-        {polygon: poly(testVertices.square), factor: 0, reference: vtx(1, 1), scaled: poly([vtx(1, 1), vtx(1, 1), vtx(1, 1), vtx(1, 1)])},
+        { polygon: poly(testVertices.square), factor: 1, reference: undefined, scaled: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), factor: 2, reference: undefined, scaled: poly([vtx(2, 2), vtx(2, -2), vtx(-2, -2), vtx(-2, 2)]) },
+        { polygon: poly(testVertices.square), factor: 0.5, reference: undefined, scaled: poly([vtx(0.5, 0.5), vtx(0.5, -0.5), vtx(-0.5, -0.5), vtx(-0.5, 0.5)]) },
+        { polygon: poly([vtx(0, 0)]), factor: 2, reference: undefined, scaled: poly([vtx(0, 0), vtx(0, 0), vtx(0, 0)]) },
+        { polygon: poly(testVertices.square), factor: 1, reference: vtx(1, 1), scaled: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), factor: 2, reference: vtx(1, 1), scaled: poly([vtx(1, 1), vtx(1, -3), vtx(-3, -3), vtx(-3, 1)]) },
+        { polygon: poly(testVertices.square), factor: 0.5, reference: vtx(1, 1), scaled: poly([vtx(1, 1), vtx(1, 0), vtx(0, 0), vtx(0, 1)]) },
+        { polygon: poly([vtx(1, 1)]), factor: 2, reference: vtx(1, 1), scaled: poly([vtx(1, 1), vtx(1, 1), vtx(1, 1)]) },
     ];
  
     let baseCase = cases[5];
 
     cases.forEach(testCase => {
-        let polygon = testCase.polygon.copy(), factor = testCase.factor, reference = testCase.reference ? testCase.reference.copy() : null, scaled = testCase.scaled.copy();
-        it(`should be ${scaled} when polygon is ${polygon}, factor is ${factor} and the reference point is ${reference ? reference : polygon.anchor} (instance)`, () => {
-            let actual = polygon.scale(factor, reference);
+        let polygon = testCase.polygon.copy(), factor = testCase.factor, scaled = testCase.scaled.copy();
+        if (testCase.reference) {
+            it(`should be ${scaled} when polygon is ${polygon}, factor is ${factor} and the reference point is ${testCase.reference} (instance)`, () => {
+                let actual = polygon.scale(factor, testCase.reference);
             expectPolygonEquivalency(actual, scaled);
         });
+        }
+        else {
+            it(`should be ${scaled} when polygon is ${polygon}, factor is ${factor} and the reference point is ${polygon.anchor} (instance)`, () => {
+                let actual = polygon.scale(factor);
+                expectPolygonEquivalency(actual, scaled);
+            });
+        }
     });
 
     cases.forEach(testCase => {
-        let polygon = testCase.polygon.copy(), factor = testCase.factor, reference = testCase.reference ? testCase.reference.copy() : null, scaled = testCase.scaled.copy();
-        it(`should be ${scaled} when polygon is ${polygon}, factor is ${factor} and the reference point is ${reference ? reference : polygon.anchor} (static)`, () => {
-            let actual = Polygon.scale(polygon, factor, reference);
+        let polygon = testCase.polygon.copy(), factor = testCase.factor, scaled = testCase.scaled.copy();
+        if (testCase.reference) {
+            it(`should be ${scaled} when polygon is ${polygon}, factor is ${factor} and the reference point is ${testCase.reference} (static)`, () => {
+                let actual = Polygon.scale(polygon, factor, testCase.reference);
             expectPolygonEquivalency(actual, scaled);
         });
+        }
+        else {
+            it(`should be ${scaled} when polygon is ${polygon}, factor is ${factor} and the reference point is ${polygon.anchor} (static)`, () => {
+                let actual = Polygon.scale(polygon, factor);
+                expectPolygonEquivalency(actual, scaled);
+            });
+        }
     });
 
     it('should return the scaled instance when called on an object', () => {
         let p = baseCase.polygon.copy();
         let f = baseCase.factor;
-        let r = baseCase.reference.copy();
+        let r = (baseCase.reference as Vertex).copy();
 
         let q = p.scale(f, r);
         expectPolygonEquivalency(p, q);
@@ -371,7 +387,7 @@ describe('Scale', () => {
     it('should not mutate the vertex when called statically', () => {
         let p = baseCase.polygon.copy();
         let f = baseCase.factor;
-        let r = baseCase.reference.copy();
+        let r = (baseCase.reference as Vertex).copy();
 
         let q = Polygon.scale(p, f, r);
         expectPolygonInequality(p, q);
@@ -400,41 +416,57 @@ describe('Scale', () => {
 });
 
 describe('Rotate', () => {
-    type TestObject = { polygon: Polygon, angle: number, reference: Vertex, rotated: Polygon };
+    type TestObject = { polygon: Polygon, angle: number, reference: Vertex | undefined, rotated: Polygon };
 
     let cases: TestObject[] = [
-        {polygon: poly(testVertices.square), angle: 0, reference: null, rotated: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), angle: 2*Math.PI, reference: null, rotated: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), angle: Math.PI / 2, reference: null, rotated: poly([vtx(-1, 1), vtx(1, 1), vtx(1, -1), vtx(-1, -1)])},
-        {polygon: poly(testVertices.square), angle: -Math.PI / 2, reference: null, rotated: poly([vtx(1, -1), vtx(-1, -1), vtx(-1, 1), vtx(1, 1)])},
-        {polygon: poly(testVertices.square), angle: 0, reference: vtx(1, 1), rotated: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), angle: 2*Math.PI, reference: vtx(1, 1), rotated: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), angle: Math.PI / 2, reference: vtx(1, 1), rotated: poly([vtx(1, 1), vtx(3, 1), vtx(3, -1), vtx(1, -1)])},
-        {polygon: poly(testVertices.square), angle: -Math.PI / 2, reference: vtx(1, 1), rotated: poly([vtx(1, 1), vtx(-1, 1), vtx(-1, 3), vtx(1, 3)])},
+        { polygon: poly(testVertices.square), angle: 0, reference: undefined, rotated: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), angle: 2 * Math.PI, reference: undefined, rotated: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), angle: Math.PI / 2, reference: undefined, rotated: poly([vtx(-1, 1), vtx(1, 1), vtx(1, -1), vtx(-1, -1)]) },
+        { polygon: poly(testVertices.square), angle: -Math.PI / 2, reference: undefined, rotated: poly([vtx(1, -1), vtx(-1, -1), vtx(-1, 1), vtx(1, 1)]) },
+        { polygon: poly(testVertices.square), angle: 0, reference: vtx(1, 1), rotated: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), angle: 2 * Math.PI, reference: vtx(1, 1), rotated: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), angle: Math.PI / 2, reference: vtx(1, 1), rotated: poly([vtx(1, 1), vtx(3, 1), vtx(3, -1), vtx(1, -1)]) },
+        { polygon: poly(testVertices.square), angle: -Math.PI / 2, reference: vtx(1, 1), rotated: poly([vtx(1, 1), vtx(-1, 1), vtx(-1, 3), vtx(1, 3)]) },
     ];
  
     let baseCase = cases[5];
 
     cases.forEach(testCase => {
-        let polygon = testCase.polygon.copy(), angle = testCase.angle, reference = testCase.reference ? testCase.reference.copy() : null, rotated = testCase.rotated.copy();
-        it(`should be ${rotated} when polygon is ${polygon}, angle is ${angle} and the reference point is ${reference ? reference : polygon.anchor} (instance)`, () => {
-            let actual = polygon.rotate(angle, reference);
+        let polygon = testCase.polygon.copy(), angle = testCase.angle, rotated = testCase.rotated.copy();
+        if (testCase.reference) {
+            it(`should be ${rotated} when polygon is ${polygon}, angle is ${angle} and the reference point is ${testCase.reference} (instance)`, () => {
+                let actual = polygon.rotate(angle, testCase.reference);
             expectPolygonEquivalency(actual, rotated);
         });
+        }
+        else {
+            it(`should be ${rotated} when polygon is ${polygon}, angle is ${angle} and the reference point is ${polygon.anchor} (instance)`, () => {
+                let actual = polygon.rotate(angle);
+                expectPolygonEquivalency(actual, rotated);
+            });
+        }
     });
 
     cases.forEach(testCase => {
-        let polygon = testCase.polygon.copy(), angle = testCase.angle, reference = testCase.reference ? testCase.reference.copy() : null, rotated = testCase.rotated.copy();
-        it(`should be ${rotated} when polygon is ${polygon}, angle is ${angle} and the reference point is ${reference ? reference : polygon.anchor} (static)`, () => {
-            let actual = Polygon.rotate(polygon, angle, reference);
+        let polygon = testCase.polygon.copy(), angle = testCase.angle, rotated = testCase.rotated.copy();
+        if (testCase.reference) {
+            it(`should be ${rotated} when polygon is ${polygon}, angle is ${angle} and the reference point is ${testCase.reference} (static)`, () => {
+                let actual = Polygon.rotate(polygon, angle, testCase.reference);
             expectPolygonEquivalency(actual, rotated);
         });
+        }
+        else {
+            it(`should be ${rotated} when polygon is ${polygon}, angle is ${angle} and the reference point is ${polygon.anchor} (static)`, () => {
+                let actual = Polygon.rotate(polygon, angle);
+                expectPolygonEquivalency(actual, rotated);
+            });
+        }
     });
 
     it('should return the scaled instance when called on an object', () => {
         let p = baseCase.polygon.copy();
         let a = baseCase.angle;
-        let r = baseCase.reference.copy();
+        let r = (baseCase.reference as Vertex).copy();
 
         let q = p.rotate(a, r);
         expectPolygonEquivalency(p, q);
@@ -443,7 +475,7 @@ describe('Rotate', () => {
     it('should not mutate the vertex when called statically', () => {
         let p = baseCase.polygon.copy();
         let a = baseCase.angle;
-        let r = baseCase.reference.copy();
+        let r = (baseCase.reference as Vertex).copy();
 
         let q = Polygon.rotate(p, a, r);
         expectPolygonInequality(p, q);
@@ -472,43 +504,59 @@ describe('Rotate', () => {
 });
 
 describe('Reflect', () => {
-    type TestObject = { polygon: Polygon, axis: Vector, reference: Vertex, reflected: Polygon };
+    type TestObject = { polygon: Polygon, axis: Vector, reference: Vertex | undefined, reflected: Polygon };
 
     let cases: TestObject[] = [
-        {polygon: poly(testVertices.square), axis: vec(0, 0), reference: null, reflected: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), axis: vec(1, 0), reference: null, reflected: poly([vtx(1, -1), vtx(1, 1), vtx(-1, 1), vtx(-1, -1)])},
-        {polygon: poly(testVertices.square), axis: vec(0, 1), reference: null, reflected: poly([vtx(-1, 1), vtx(-1, -1), vtx(1, -1), vtx(1, 1) ])},
-        {polygon: poly(testVertices.square), axis: vec(1, 1), reference: null, reflected: poly([vtx(1, 1), vtx(-1, 1), vtx(-1, -1), vtx(1, -1)])},
-        {polygon: poly(testVertices.square), axis: vec(-1, 1), reference: null, reflected: poly([vtx(-1, -1), vtx(1, -1), vtx(1, 1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), axis: vec(0, 0), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), axis: vec(1, 0), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(1, 3), vtx(-1, 3), vtx(-1, 1)])},
-        {polygon: poly(testVertices.square), axis: vec(0, 1), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(1, -1), vtx(3, -1), vtx(3, 1)])},
-        {polygon: poly(testVertices.square), axis: vec(1, 1), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(-1, 1), vtx(-1, -1), vtx(1, -1)])},
-        {polygon: poly(testVertices.square), axis: vec(-1, 1), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(3, 1), vtx(3, 3), vtx(1, 3)])},
+        { polygon: poly(testVertices.square), axis: vec(0, 0), reference: undefined, reflected: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), axis: vec(1, 0), reference: undefined, reflected: poly([vtx(1, -1), vtx(1, 1), vtx(-1, 1), vtx(-1, -1)]) },
+        { polygon: poly(testVertices.square), axis: vec(0, 1), reference: undefined, reflected: poly([vtx(-1, 1), vtx(-1, -1), vtx(1, -1), vtx(1, 1)]) },
+        { polygon: poly(testVertices.square), axis: vec(1, 1), reference: undefined, reflected: poly([vtx(1, 1), vtx(-1, 1), vtx(-1, -1), vtx(1, -1)]) },
+        { polygon: poly(testVertices.square), axis: vec(-1, 1), reference: undefined, reflected: poly([vtx(-1, -1), vtx(1, -1), vtx(1, 1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), axis: vec(0, 0), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(1, -1), vtx(-1, -1), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), axis: vec(1, 0), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(1, 3), vtx(-1, 3), vtx(-1, 1)]) },
+        { polygon: poly(testVertices.square), axis: vec(0, 1), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(1, -1), vtx(3, -1), vtx(3, 1)]) },
+        { polygon: poly(testVertices.square), axis: vec(1, 1), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(-1, 1), vtx(-1, -1), vtx(1, -1)]) },
+        { polygon: poly(testVertices.square), axis: vec(-1, 1), reference: vtx(1, 1), reflected: poly([vtx(1, 1), vtx(3, 1), vtx(3, 3), vtx(1, 3)]) },
     ];
  
     let baseCase = cases[6];
 
     cases.forEach(testCase => {
-        let polygon = testCase.polygon.copy(), axis = testCase.axis.copy(), reference = testCase.reference ? testCase.reference.copy() : null, reflected = testCase.reflected.copy();
-        it(`should be ${reflected} when polygon is ${polygon}, reflection axis is ${axis} and the reference point is ${reference ? reference : polygon.anchor} (instance)`, () => {
-            let actual = polygon.reflect(axis, reference);
+        let polygon = testCase.polygon.copy(), axis = testCase.axis.copy(), reflected = testCase.reflected.copy();
+        if (testCase.reference) {
+            it(`should be ${reflected} when polygon is ${polygon}, reflection axis is ${axis} and the reference point is ${testCase.reference} (instance)`, () => {
+                let actual = polygon.reflect(axis, testCase.reference);
             expectPolygonEquivalency(actual, reflected);
         });
+        }
+        else {
+            it(`should be ${reflected} when polygon is ${polygon}, reflection axis is ${axis} and the reference point is ${polygon.anchor} (instance)`, () => {
+                let actual = polygon.reflect(axis);
+                expectPolygonEquivalency(actual, reflected);
+            });
+        }
     });
 
     cases.forEach(testCase => {
         let polygon = testCase.polygon.copy(), axis = testCase.axis.copy(), reference = testCase.reference ? testCase.reference.copy() : null, reflected = testCase.reflected.copy();
-        it(`should be ${reflected} when polygon is ${polygon}, reflection axis is ${axis} and the reference point is ${reference ? reference : polygon.anchor} (static)`, () => {
-            let actual = Polygon.reflect(polygon, axis, reference);
+        if (testCase.reference) {
+            it(`should be ${reflected} when polygon is ${polygon}, reflection axis is ${axis} and the reference point is ${testCase.reference} (static)`, () => {
+                let actual = Polygon.reflect(polygon, axis, testCase.reference);
             expectPolygonEquivalency(actual, reflected);
         });
+        }
+        else {
+            it(`should be ${reflected} when polygon is ${polygon}, reflection axis is ${axis} and the reference point is ${polygon.anchor} (static)`, () => {
+                let actual = Polygon.reflect(polygon, axis);
+                expectPolygonEquivalency(actual, reflected);
+            });
+        }
     });
 
     it('should return the scaled instance when called on an object', () => {
         let p = baseCase.polygon.copy();
         let a = baseCase.axis.copy();
-        let r = baseCase.reference.copy();
+        let r = (baseCase.reference as Vertex).copy();
 
         let q = p.reflect(a, r);
         expectPolygonEquivalency(p, q);
@@ -517,7 +565,7 @@ describe('Reflect', () => {
     it('should not mutate the vertex when called statically', () => {
         let p = baseCase.polygon.copy();
         let a = baseCase.axis.copy();
-        let r = baseCase.reference.copy();
+        let r = (baseCase.reference as Vertex).copy();
 
         let q = Polygon.reflect(p, a, r);
         expectPolygonInequality(p, q);

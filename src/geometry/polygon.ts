@@ -207,7 +207,7 @@ export class Polygon {
      * @param reference The point from which to scale the polygon vertices, the polygon anchor point by default.
      * @returns The polygon after scaling.
      */
-    public scale(factor: number, reference: Vertex = null): Polygon {
+    public scale(factor: number, reference: Vertex | undefined = undefined): Polygon {
         return this.transform(vertex => vertex.scale(factor, reference ? reference : this.anchor));
     }
 
@@ -218,7 +218,7 @@ export class Polygon {
      * @param reference The point from which to scale the polygon vertices, the polygon anchor point by default.
      * @returns A new scaled polygon.
      */
-    public static scale(polygon: Polygon, factor: number, reference: Vertex = null): Polygon {
+    public static scale(polygon: Polygon, factor: number, reference: Vertex | undefined = undefined): Polygon {
         return polygon.copy().scale(factor, reference);
     }
 
@@ -228,7 +228,7 @@ export class Polygon {
      * @param reference The point from which to rotate the polygon, the polygon anchor point by default.
      * @returns The polygon after rotation.
      */
-    public rotate(angle: number, reference: Vertex = null): Polygon {
+    public rotate(angle: number, reference: Vertex | undefined = undefined): Polygon {
         return this.transform(vertex => vertex.rotate(angle, reference ? reference : this.anchor));
     }
 
@@ -239,7 +239,7 @@ export class Polygon {
      * @param reference The point from which to rotate the polygon, the polygon anchor point by default. 
      * @returns A new rotated polygon.
      */
-    public static rotate(polygon: Polygon, angle: number, reference: Vertex = null): Polygon {
+    public static rotate(polygon: Polygon, angle: number, reference: Vertex | undefined = undefined): Polygon {
         return polygon.copy().rotate(angle, reference);
     }
 
@@ -249,7 +249,7 @@ export class Polygon {
      * @param reference The point from which to project the axis for reflection, the polygon anchor point by default.
      * @returns The polygon after reflection. 
      */
-    public reflect(axis: Vector, reference: Vertex = null): Polygon {
+    public reflect(axis: Vector, reference: Vertex | undefined = undefined): Polygon {
         return this.transform(vertex => vertex.reflect(axis, reference ? reference : this.anchor));
     }
 
@@ -260,7 +260,7 @@ export class Polygon {
      * @param reference The point from which to project the axis for reflection, the polygon anchor point by default.
      * @returns A new reflected polygon.
      */
-    public static reflect(polygon: Polygon, axis: Vector, reference: Vertex = null): Polygon {
+    public static reflect(polygon: Polygon, axis: Vector, reference: Vertex | undefined = undefined): Polygon {
         return polygon.copy().reflect(axis, reference);
     }
 

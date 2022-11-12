@@ -86,7 +86,7 @@ export class Vertex {
      * @param control The point from which to scale the vertex, the origin by default.
      * @returns The vertex after scaling.
      */
-    public scale(factor: number, control: Vertex = null): Vertex {
+    public scale(factor: number, control: Vertex | undefined = undefined): Vertex {
         let scaled = Vertex.scale(this, factor, control);
         this.x = scaled.x;
         this.y = scaled.y;
@@ -100,7 +100,7 @@ export class Vertex {
      * @param control The point from which to scale the vertex, the origin by default.
      * @returns A new scaled vertex.
      */
-    public static scale(vertex: Vertex, factor: number, control: Vertex = null): Vertex {
+    public static scale(vertex: Vertex, factor: number, control: Vertex | undefined = undefined): Vertex {
         let controlVec = control ? control.toVector() : vec(0, 0);
         return controlVec.add(vertex.toVector().subtract(controlVec).scale(factor)).toVertex();
     }
@@ -111,7 +111,7 @@ export class Vertex {
      * @param control The point from which to rotate the vertex, the origin by default.
      * @returns The vertex after rotation.
      */
-    public rotate(angle: number, control: Vertex = null): Vertex {
+    public rotate(angle: number, control: Vertex | undefined = undefined): Vertex {
         let rotated = Vertex.rotate(this, angle, control);
         this.x = rotated.x;
         this.y = rotated.y;
@@ -125,7 +125,7 @@ export class Vertex {
      * @param control The point from which to rotate the vertex, the origin by default.
      * @returns A new rotated vertex.
      */
-    public static rotate(vertex: Vertex, angle: number, control: Vertex = null): Vertex {
+    public static rotate(vertex: Vertex, angle: number, control: Vertex | undefined = undefined): Vertex {
         let controlVec = control ? control.toVector() : vec(0, 0);
         return controlVec.add(vertex.toVector().subtract(controlVec).rotate(angle)).toVertex();
     }
@@ -136,7 +136,7 @@ export class Vertex {
      * @param control The point from which to project the axis for reflection, the origin by default.
      * @returns The vertex after reflection.
      */
-    public reflect(axis: Vector, control: Vertex = null): Vertex {
+    public reflect(axis: Vector, control: Vertex | undefined = undefined): Vertex {
         let reflected = Vertex.reflect(this, axis, control);
         this.x = reflected.x;
         this.y = reflected.y;
@@ -150,7 +150,7 @@ export class Vertex {
      * @param control The point from which to project the axis for reflection, the origin by default.
      * @returns A new reflected vertex.
      */
-    public static reflect(vertex: Vertex, axis: Vector, control: Vertex = null): Vertex {
+    public static reflect(vertex: Vertex, axis: Vector, control: Vertex | undefined = undefined): Vertex {
         let controlVec = control ? control.toVector() : vec(0, 0);
         return axis.magnitude() > 0
             ? controlVec.add(vertex.toVector().subtract(controlVec).reflect(axis)).toVertex()
