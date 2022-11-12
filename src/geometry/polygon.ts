@@ -1,6 +1,6 @@
 import { edge, Edge } from "./edge"
 import { Vector } from "./vector"
-import { Vertex } from "./vertex";
+import { Vertex, vtx } from "./vertex";
 import { mod } from "./../utility/numerics"
 
 /**
@@ -43,29 +43,98 @@ export class Polygon {
      * @param vertices 
      */
     constructor(vertices: Vertex[]) {
-        this._vertices = vertices.slice();
+        this._vertices = Polygon.processVertices(vertices);
         this._edges = Polygon.calculateEdges(this._vertices);
         this._clockwise = Polygon.calculateAngularSum(this._edges) < 0;
-        this.anchor = Vertex.mean(vertices);
+        this.anchor = Polygon.calculateVertexCentroid(this._vertices);
+    }
+
+    private static processVertices(vertices: Vertex[]): Vertex[] {
+        let processed = [];
+        if (vertices.length == 0) {
+            return processed;
+        }
+
+        for (let i = 0; i + 1 < vertices.length; i++) {
+            if (vertices[i].isEquivalentTo(vertices[i + 1])) {
+                continue;
+            }
+            else {
+                processed.push(vertices[i].copy())
+            }
+        }
+
+        if (!vertices[vertices.length - 1].isEquivalentTo(vertices[0])) {
+            processed.push(vertices[vertices.length - 1].copy());
+        }
+
+        if (processed.length == 0 && vertices.length > 0) {
+            processed.push(vertices[0].copy());
+        }
+
+        return processed;
     }
 
     private static calculateEdges(vertices: Vertex[]): Edge[] {
         let edges: Edge[] = [];
+
+        if (vertices.length < 2) {
+            return edges;
+        }
+
         for (let i = 0; i + 1 < vertices.length; i++) {
             edges.push(edge(vertices[i], vertices[i + 1]));
         }
+
         edges.push(edge(vertices[vertices.length - 1], vertices[0]));
+
         return edges;
     }
 
     private static calculateAngularSum(edges: Edge[]): number {
         let sum = 0;
+
+        if (edges.length < 1) {
+            return sum;
+        }
+
         let priorHeading = edges[edges.length - 1].direction().angle();
         for (let i = 0; i < edges.length; i++) {
             sum += edges[i].start.angleTo(edges[i].end, priorHeading);
             priorHeading = edges[i].direction().angle();
         }
         return sum;
+    }
+
+    private static calculateVertexCentroid(vertices: Vertex[]): Vertex {
+        let N = vertices.length;
+        switch (N) {
+            case 0:
+                return vtx(0, 0);
+            case 1:
+                return vertices[0];
+        }
+
+        let A = 0;
+        for (let i = 0; i < N; i++) {
+            let v0 = vertices[mod(i, vertices.length)];
+            let v1 = vertices[mod(i + 1, N)];
+            A += (v0.x * v1.y - v0.y * v1.x);
+        }
+        A *= 0.5;
+
+        let Cx = 0;
+        let Cy = 0;
+        for (let i = 0; i < N; i++) {
+            let v0 = vertices[mod(i, vertices.length)];
+            let v1 = vertices[mod(i + 1, N)];
+            Cx += (v0.x + v1.x) * (v0.x * v1.y - v0.y * v1.x);
+            Cy += (v0.y + v1.y) * (v0.x * v1.y - v0.y * v1.x);
+        }
+        Cx /= 6 * A
+        Cy /= 6 * A
+
+        return vtx(Cx, Cy);
     }
 
     /**
@@ -138,7 +207,7 @@ export class Polygon {
      * @param reference The point from which to scale the polygon vertices, the polygon anchor point by default.
      * @returns The polygon after scaling.
      */
-    public scale(factor: number, reference: Vertex = null): Polygon {
+    public scale(factor: number, reference: Vertex | undefined = undefined): Polygon {
         return this.transform(vertex => vertex.scale(factor, reference ? reference : this.anchor));
     }
 
@@ -149,7 +218,7 @@ export class Polygon {
      * @param reference The point from which to scale the polygon vertices, the polygon anchor point by default.
      * @returns A new scaled polygon.
      */
-    public static scale(polygon: Polygon, factor: number, reference: Vertex = null): Polygon {
+    public static scale(polygon: Polygon, factor: number, reference: Vertex | undefined = undefined): Polygon {
         return polygon.copy().scale(factor, reference);
     }
 
@@ -159,7 +228,7 @@ export class Polygon {
      * @param reference The point from which to rotate the polygon, the polygon anchor point by default.
      * @returns The polygon after rotation.
      */
-    public rotate(angle: number, reference: Vertex = null): Polygon {
+    public rotate(angle: number, reference: Vertex | undefined = undefined): Polygon {
         return this.transform(vertex => vertex.rotate(angle, reference ? reference : this.anchor));
     }
 
@@ -170,7 +239,7 @@ export class Polygon {
      * @param reference The point from which to rotate the polygon, the polygon anchor point by default. 
      * @returns A new rotated polygon.
      */
-    public static rotate(polygon: Polygon, angle: number, reference: Vertex = null): Polygon {
+    public static rotate(polygon: Polygon, angle: number, reference: Vertex | undefined = undefined): Polygon {
         return polygon.copy().rotate(angle, reference);
     }
 
@@ -180,7 +249,7 @@ export class Polygon {
      * @param reference The point from which to project the axis for reflection, the polygon anchor point by default.
      * @returns The polygon after reflection. 
      */
-    public reflect(axis: Vector, reference: Vertex = null): Polygon {
+    public reflect(axis: Vector, reference: Vertex | undefined = undefined): Polygon {
         return this.transform(vertex => vertex.reflect(axis, reference ? reference : this.anchor));
     }
 
@@ -191,7 +260,7 @@ export class Polygon {
      * @param reference The point from which to project the axis for reflection, the polygon anchor point by default.
      * @returns A new reflected polygon.
      */
-    public static reflect(polygon: Polygon, axis: Vector, reference: Vertex = null): Polygon {
+    public static reflect(polygon: Polygon, axis: Vector, reference: Vertex | undefined = undefined): Polygon {
         return polygon.copy().reflect(axis, reference);
     }
 
@@ -276,6 +345,88 @@ export class Polygon {
         });
         let splitSegments = poly(rawOffsetVertices).overlapSplit();
         return splitSegments.filter((segment) => segment.clockwise == this.clockwise);
+    }
+
+    /**
+     * Creates a polygon from a collection of unordered edges. This method operates under the assumption that each edge is 
+     * connected to two other edges in the collection with no particular ordering or direction.
+     * @param edges The collection of unordered edges. 
+     * @returns A polygon created by sorting the vertices of the unordered edges.
+     */
+    public static fromUnorderedEdges(edges: Edge[]): Polygon {
+        let vertices = [edges[0].start];
+        let useEnd = true;
+        let targetIndex = 0;
+        let bannedIndices = [];
+        let edgeCount = edges.length;
+        while (vertices.length < edgeCount) {
+            bannedIndices.push(targetIndex);
+            let target = edges[targetIndex];
+            let next = useEnd ? target.end : target.start;
+            for (let potentialIndex = 0; potentialIndex < edges.length; potentialIndex++) {
+                if (bannedIndices.includes(potentialIndex) || potentialIndex == targetIndex) continue;
+                let potential = edges[potentialIndex];
+                if (next.isEquivalentTo(potential.start)) {
+                    bannedIndices.push(potentialIndex);
+                    targetIndex = potentialIndex;
+                    vertices.push(potential.start);
+                    useEnd = true;
+                    break;
+                }
+                if (next.isEquivalentTo(potential.end)) {
+                    bannedIndices.push(potentialIndex);
+                    targetIndex = potentialIndex;
+                    vertices.push(potential.end);
+                    useEnd = false;
+                    break;
+                }
+            }
+        }
+        return poly(vertices);
+    }
+
+    /**
+     * Generates hatching lines within the bounds of the polygon with specified angle and spacing configuration.
+     * @param angle The angle of the hatch lines within the polygon.
+     * @param spacing The desired spacing between hatch lines.
+     * @param jitter A function that generates jitter for each hatch line, this function must accept values between 0 and 1 and 
+     *               map them to values -1 and 1.
+     * @param randomizer A randomization function to use as the input for the jitter function that returns values between 0 and 1.
+     * @returns An array of edges representing the hatch lines within the polygon
+     */
+    public hatchFill(angle: number, spacing: number, jitter: (x: number) => number, randomizer: () => number): Edge[] {
+        let maxAnchorDistance = this.getMaxAnchorDistance();
+        let steps = Math.floor(maxAnchorDistance / spacing);
+        let grain = Vector.unit(angle);
+        let ortho = grain.copy().rotate(Math.PI / 2);
+        let candidates = [];
+        for (let offset = -steps; offset <= steps; offset++) {
+            let edgeShift = Vector.scale(ortho, spacing * (offset + jitter(randomizer())));
+            let control = this.anchor.toVector().add(edgeShift);
+            candidates.push(
+                edge(
+                    Vector.add(control, Vector.scale(grain, -maxAnchorDistance * 2)).toVertex(),
+                    Vector.add(control, Vector.scale(grain, +maxAnchorDistance * 2)).toVertex()));
+        }
+
+        let hatchLines = [];
+        candidates.forEach(candidate => {
+            let intersections = this.intersectEdge(candidate);
+            for (let i = 0; i < intersections.length - 1; i += 2) {
+                hatchLines.push(edge(intersections[i], intersections[i + 1]));
+            }
+        });
+
+        return hatchLines;
+    }
+
+    private getMaxAnchorDistance(): number {
+        let maxDistance = 0;
+        this._vertices.forEach(vertex => {
+            let distance = this.anchor.distanceTo(vertex);
+            if (distance > maxDistance) maxDistance = distance;
+        });
+        return maxDistance;
     }
 }
 

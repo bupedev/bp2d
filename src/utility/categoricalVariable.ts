@@ -3,7 +3,7 @@
  * weightings. Categories can be selected by providing a normalized value that is mapped based on the category weights.
  */
 export class CategoricalVariable {
-    private _categoryWeights: { [value: string] : number; };
+    private _categoryWeights: { [value: string]: number; };
 
     /**
      * A copy of the collection of valid categories for the variable.
@@ -15,7 +15,7 @@ export class CategoricalVariable {
     /**
      * A copy of the collection of normalized weights for each of the variable categories.
      */
-     public get weights(): number[] {
+    public get weights(): number[] {
         return Object.values(this._categoryWeights).slice();
     }
 
@@ -30,7 +30,7 @@ export class CategoricalVariable {
      * Constructs the categorical variable with weights for each category.
      * @param categoryWeights The category weights as a dictionary. The weights do not need to be normalized.
      */
-    constructor(categoryWeights:  { [value: string] : number; }) {
+    constructor(categoryWeights: { [value: string]: number; }) {
         this._categoryWeights = {};
         let total = Object.values(categoryWeights).reduce((prev, current, index, array) => prev + current);
         Object.keys(categoryWeights).forEach(category => {
@@ -50,14 +50,13 @@ export class CategoricalVariable {
         let categories = Object.keys(this._categoryWeights);
         categories.forEach(category => {
             cumulative_total += this._categoryWeights[category];
-            if(!selected && cumulative_total > value) {
+            if (!selected && cumulative_total > value) {
                 selected = category;
             }
         });
 
-        if(!selected)
-        {
-            selected = categories[categories.length-1];
+        if (!selected) {
+            selected = categories[categories.length - 1];
         }
 
         return selected;

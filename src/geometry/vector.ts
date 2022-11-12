@@ -45,7 +45,7 @@ export class Vector {
      * Converts this vector to a vertex with x and y coordinates equal to the vector proportions.
      * @returns This vector as a vertex.
      */
-     public toVertex(): Vertex {
+    public toVertex(): Vertex {
         return vtx(this.x, this.y);
     }
 
@@ -116,7 +116,7 @@ export class Vector {
      * @param other The vector with proportions to add to this one.
      * @returns The sum of the vectors.
      */
-     public add(other: Vector): Vector {
+    public add(other: Vector): Vector {
         this.x += other.x;
         this.y += other.y;
         return this;
@@ -128,7 +128,7 @@ export class Vector {
      * @param vectorB The vector to add.
      * @returns The sum of the vectors.
      */
-     public static add(vectorA: Vector, vectorB: Vector): Vector {
+    public static add(vectorA: Vector, vectorB: Vector): Vector {
         return vectorA.copy().add(vectorB);
     }
 
@@ -170,7 +170,7 @@ export class Vector {
      * @param factor The amount to scale the vector by.
      * @returns A new scaled vector.
      */
-     public static scale(vector: Vector, factor: number): Vector {
+    public static scale(vector: Vector, factor: number): Vector {
         return vector.copy().scale(factor);
     }
 
@@ -180,7 +180,7 @@ export class Vector {
      */
     public normalize(): Vector {
         let length = this.magnitude();
-        if(length == 0) return this;
+        if (length == 0) return this;
         this.x /= length;
         this.y /= length;
         return this;
@@ -191,7 +191,7 @@ export class Vector {
      * @param vector The vector to normalize.
      * @returns A new normalized vector.
      */
-     public static normalize(vector: Vector): Vector {
+    public static normalize(vector: Vector): Vector {
         return vector.copy().normalize();
     }
 
@@ -215,7 +215,7 @@ export class Vector {
      * @param angle The amount to rotate the vector by in radians.
      * @returns A new rotated vector
      */
-     public static rotate(vector: Vector, angle: number): Vector {
+    public static rotate(vector: Vector, angle: number): Vector {
         return vector.copy().rotate(angle);
     }
 
@@ -225,7 +225,7 @@ export class Vector {
      * @returns The vector after reflection.
      */
     public reflect(axis: Vector): Vector {
-        let angle = Vector.standardizeAngle(2*axis.angle());
+        let angle = Vector.standardizeAngle(2 * axis.angle());
         let cos = Math.cos(angle);
         let sin = Math.sin(angle);
         let x = this.x * cos + this.y * sin;
@@ -240,7 +240,7 @@ export class Vector {
      * @param axis The axis along which to reflect the vector.
      * @returns A new reflected vector
      */
-     public static reflect(vector: Vector, axis: Vector): Vector {
+    public static reflect(vector: Vector, axis: Vector): Vector {
         return vector.copy().reflect(axis);
     }
 }

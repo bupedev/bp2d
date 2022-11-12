@@ -58,7 +58,7 @@ export class Edge {
      * @returns A normal vector.
      */
     public normal(clockwise: boolean = false): Vector {
-        return this.direction(clockwise).normalize().rotate(-Math.PI/2);
+        return this.direction(clockwise).normalize().rotate(-Math.PI / 2);
     }
 
     /**
@@ -81,13 +81,13 @@ export class Edge {
         let s: Vector = Vector.subtract(edge.end.toVector(), q);
         let a: Vector = Vector.subtract(q, p);
         let b: number = r.cross(s);
-        let t: number = a.cross(Vector.scale(s, 1/b));
-        let u: number = a.cross(Vector.scale(r, 1/b));
+        let t: number = a.cross(Vector.scale(s, 1 / b));
+        let u: number = a.cross(Vector.scale(r, 1 / b));
 
         if (r.cross(s) != 0 && inRange(t, 0, 1) && inRange(u, 0, 1)) {
             return p.add(r.scale(t)).toVertex();
         }
-        
+
         return null;
     }
 }

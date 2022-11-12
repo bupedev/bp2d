@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] - 2022-11-12
+
+### Added
+
+- Added types definition for npm configuration.
+- Added new polygon methods:
+  - `fromUnorderedEdges` is a static method that creates a polygon object from a set of unordered edges.
+  - `hatchFill ` is an instance method that generates a collection of evenly spaced parallel lines that would fill the polygon.
+
+### Changed
+
+ - Polygons constructed with consecutive vertices that are equivalent will ignore the equivalent vertices.
+ - The polygon constructor is more resiliant to edge-case arguments.
+ - Polygon anchor points are now correctly calculated with a centroid algorithm instead of an arithmetic mean of vertex coordinates.
+
 ## [0.3.2] - 2022-05-30
 
 ### Added
