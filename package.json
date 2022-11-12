@@ -1,8 +1,9 @@
 {
   "name": "gactk",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A UMD Typescript library for generative art utilities",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "all": "npm run build && npm run tests && npm run docs",
     "clean": "shx rm -rf _bundles lib lib-esm",
