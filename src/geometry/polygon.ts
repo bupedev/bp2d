@@ -1,4 +1,4 @@
-import { edge, Edge } from "./edge"
+import { line, Line } from "./line"
 import { Vector } from "./vector"
 import { Vertex, vtx } from "./vertex";
 import { mod } from "./../utility/numerics"
@@ -8,7 +8,7 @@ import { mod } from "./../utility/numerics"
  */
 export class Polygon {
     private _vertices: Vertex[];
-    private _edges: Edge[];
+    private _edges: Line[];
     private _clockwise: boolean;
 
     /**
@@ -21,7 +21,7 @@ export class Polygon {
     /**
      * A copy of the collection of edges that constitute the boundary of the polygon.
      */
-    public get edges(): Edge[] {
+    public get edges(): Line[] {
         return this._edges.map((edge) => edge.copy());
     };
 
@@ -75,23 +75,23 @@ export class Polygon {
         return processed;
     }
 
-    private static calculateEdges(vertices: Vertex[]): Edge[] {
-        let edges: Edge[] = [];
+    private static calculateEdges(vertices: Vertex[]): Line[] {
+        let edges: Line[] = [];
 
         if (vertices.length < 2) {
             return edges;
         }
 
         for (let i = 0; i + 1 < vertices.length; i++) {
-            edges.push(edge(vertices[i], vertices[i + 1]));
+            edges.push(line(vertices[i], vertices[i + 1]));
         }
 
-        edges.push(edge(vertices[vertices.length - 1], vertices[0]));
+        edges.push(line(vertices[vertices.length - 1], vertices[0]));
 
         return edges;
     }
 
-    private static calculateAngularSum(edges: Edge[]): number {
+    private static calculateAngularSum(edges: Line[]): number {
         let sum = 0;
 
         if (edges.length < 1) {
@@ -157,22 +157,22 @@ export class Polygon {
     }
 
     /**
-     * Calculates all distinct intersecting points between the edges of this polygon and another edge.
-     * @param edge The edge to intersect with the edges of this polygon.
+     * Calculates all distinct intersecting points between the edges of this polygon and a line.
+     * @param line The line to intersect with the edges of this polygon.
      * @returns All distinct intersecting points in an array.
      */
-    public intersectEdge(edge: Edge): Vertex[] {
+    public intersectLine(line: Line): Vertex[] {
         let vertices: Vertex[] = [];
 
-        this.edges.forEach(polygonEdge => {
-            let intersection = polygonEdge.intersectEdge(edge);
+        this.edges.forEach(edge => {
+            let intersection = edge.intersectLine(line);
             if (intersection) {
                 vertices.push(intersection);
             }
         });
 
         vertices.sort((a, b) => {
-            return a.distanceTo(edge.start) - b.distanceTo(edge.start)
+            return a.distanceTo(line.start) - b.distanceTo(line.start)
         });
 
         return vertices.filter((vertex, index, array) => {
@@ -293,7 +293,7 @@ export class Polygon {
                         let tj = mod(j, edgeCount);
                         subIndices.push(tj);
                         let target = polygon._edges[tj];
-                        let intersection = base.intersectEdge(target);
+                        let intersection = base.intersectLine(target);
                         if (intersection && !(intersection.isEquivalentTo(base.end) || intersection.isEquivalentTo(base.start))) {
                             let modifiedVertices = polygon._vertices.filter((_, index) => !subIndices.includes(index));
                             modifiedVertices.splice(i + 1, 0, intersection);
@@ -353,7 +353,7 @@ export class Polygon {
      * @param edges The collection of unordered edges. 
      * @returns A polygon created by sorting the vertices of the unordered edges.
      */
-    public static fromUnorderedEdges(edges: Edge[]): Polygon {
+    public static fromUnorderedEdges(edges: Line[]): Polygon {
         let vertices = [edges[0].start];
         let useEnd = true;
         let targetIndex = 0;
@@ -392,28 +392,28 @@ export class Polygon {
      * @param jitter A function that generates jitter for each hatch line, this function must accept values between 0 and 1 and 
      *               map them to values -1 and 1.
      * @param randomizer A randomization function to use as the input for the jitter function that returns values between 0 and 1.
-     * @returns An array of edges representing the hatch lines within the polygon
+     * @returns An array of line representing the hatch lines within the polygon
      */
-    public hatchFill(angle: number, spacing: number, jitter: (x: number) => number, randomizer: () => number): Edge[] {
+    public hatchFill(angle: number, spacing: number, jitter: (x: number) => number, randomizer: () => number): Line[] {
         let maxAnchorDistance = this.getMaxAnchorDistance();
         let steps = Math.floor(maxAnchorDistance / spacing);
         let grain = Vector.unit(angle);
         let ortho = grain.copy().rotate(Math.PI / 2);
         let candidates = [];
         for (let offset = -steps; offset <= steps; offset++) {
-            let edgeShift = Vector.scale(ortho, spacing * (offset + jitter(randomizer())));
-            let control = this.anchor.toVector().add(edgeShift);
+            let lineShift = Vector.scale(ortho, spacing * (offset + jitter(randomizer())));
+            let control = this.anchor.toVector().add(lineShift);
             candidates.push(
-                edge(
+                line(
                     Vector.add(control, Vector.scale(grain, -maxAnchorDistance * 2)).toVertex(),
                     Vector.add(control, Vector.scale(grain, +maxAnchorDistance * 2)).toVertex()));
         }
 
         let hatchLines = [];
         candidates.forEach(candidate => {
-            let intersections = this.intersectEdge(candidate);
+            let intersections = this.intersectLine(candidate);
             for (let i = 0; i < intersections.length - 1; i += 2) {
-                hatchLines.push(edge(intersections[i], intersections[i + 1]));
+                hatchLines.push(line(intersections[i], intersections[i + 1]));
             }
         });
 

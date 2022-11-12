@@ -3,23 +3,23 @@ import { Vector } from './vector'
 import { inRange } from './../utility/numerics'
 
 /**
- * A polygonal edge in 2-dimensional space, effectively a line segment.
+ * A line in two dimensional space.
  */
-export class Edge {
+export class Line {
     /**
-     * The starting vertex of the edge.
+     * The starting vertex of the line.
      */
     public start: Vertex;
 
     /**
-     * The ending vertex of the edge.
+     * The ending vertex of the line.
      */
     public end: Vertex;
 
     /**
-     * Constructs an edge with specified starting and ending vertices.
-     * @param start A vertex representing the starting vertex of the edge.
-     * @param end A vertex representing the ending vertex of the edge.
+     * Constructs an line with specified starting and ending vertices.
+     * @param start A vertex representing the starting vertex of the line.
+     * @param end A vertex representing the ending vertex of the line.
      */
     constructor(start: Vertex, end: Vertex) {
         this.start = start;
@@ -27,24 +27,24 @@ export class Edge {
     }
 
     /**
-     * Creates a new Edge object with the same properties of this one.
-     * @returns A new Edge object.
+     * Creates a new line object with the same properties of this one.
+     * @returns A new line object.
      */
-    public copy(): Edge {
-        return edge(this.start.copy(), this.end.copy());
+    public copy(): Line {
+        return line(this.start.copy(), this.end.copy());
     }
 
     /**
-     * Creates a user-friendly formatted string for the edge. Elements are contained in parenthesis, separated by 
+     * Creates a user-friendly formatted string for the line. Elements are contained in parenthesis, separated by 
      * commas and formatted as user-friendly vertices.
-     * @returns A formatted string representing the edge.
+     * @returns A formatted string representing the line.
      */
     public toString(): string {
         return `(${this.start}, ${this.end})`;
     }
 
     /**
-     * Creates a displacement vector between the start and end of the edge.
+     * Creates a displacement vector between the start and end of the line.
      * @param reverse Creates a displacement vector in the opposite direction if true.
      * @returns A displacement vector.
      */
@@ -53,7 +53,7 @@ export class Edge {
     }
 
     /**
-     * Creates a vector normal to the edge. The method operates under the assumption that the edge is part of a CCW polygon.
+     * Creates a vector normal to the line. The method operates under the assumption that the line is an edge of a CCW polygon.
      * @param clockwise Creates a normal vector in the opposite direction.
      * @returns A normal vector.
      */
@@ -62,23 +62,23 @@ export class Edge {
     }
 
     /**
-     * Calculates the length of the edge.
-     * @returns The length of the edge.
+     * Calculates the length of the line.
+     * @returns The length of the line.
      */
     public length(): number {
         return this.direction().magnitude();
     }
 
     /**
-     * Calculates the point of intersection between this and another edge.
-     * @param edge The edge to intersect with this one.
+     * Calculates the point of intersection between this and another line.
+     * @param line The line to intersect with this one.
      * @returns The point of intersection if it exists, null otherwise.
      */
-    public intersectEdge(edge: Edge): Vertex {
+    public intersectLine(line: Line): Vertex {
         let p: Vector = this.start.toVector();
-        let q: Vector = edge.start.toVector();
+        let q: Vector = line.start.toVector();
         let r: Vector = Vector.subtract(this.end.toVector(), p);
-        let s: Vector = Vector.subtract(edge.end.toVector(), q);
+        let s: Vector = Vector.subtract(line.end.toVector(), q);
         let a: Vector = Vector.subtract(q, p);
         let b: number = r.cross(s);
         let t: number = a.cross(Vector.scale(s, 1 / b));
@@ -93,11 +93,11 @@ export class Edge {
 }
 
 /**
- * Shorthand constructor for an Edge object.
- * @param start The starting vertex of the edge.
- * @param end The ending vertex of the edge.
- * @returns A new Edge instance.
+ * Shorthand constructor for an line object.
+ * @param start The starting vertex of the line.
+ * @param end The ending vertex of the line.
+ * @returns A new line instance.
  */
-export function edge(start: Vertex, end: Vertex): Edge {
-    return new Edge(start, end);
+export function line(start: Vertex, end: Vertex): Line {
+    return new Line(start, end);
 }

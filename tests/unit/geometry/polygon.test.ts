@@ -1,4 +1,4 @@
-import { Polygon, poly, Edge, edge, Vertex, vtx, Vector, vec } from '../../../src/index';
+import { Polygon, poly, Line, line, Vertex, vtx, Vector, vec } from '../../../src/index';
 
 function expectPolygonEquivalency(actual: Polygon, expected: Polygon): void {
     expect(actual.vertices.length).toBe(expected.vertices.length);
@@ -12,7 +12,7 @@ function expectPolygonInequality(actual: Polygon, expected: Polygon): void {
     expect(actual.vertices.every((vertex, index) => { vertex.isEquivalentTo(expected.vertices[index]) })).toBeFalsy();
 }
 
-function expectEdgeEquivalency(actual: Edge, expected: Edge): void {
+function expectLineEquivalency(actual: Line, expected: Line): void {
     expect(actual.start.isEquivalentTo(expected.start)).toBeTruthy();
     expect(actual.end.isEquivalentTo(expected.end)).toBeTruthy();
 }
@@ -60,10 +60,10 @@ let testVertices = {
 
 let testEdges = {
     "square": [
-        edge(vtx(1, 1), vtx(1, -1)),
-        edge(vtx(1, -1), vtx(-1, -1)),
-        edge(vtx(-1, -1), vtx(-1, 1)),
-        edge(vtx(-1, 1), vtx(1, 1))
+        line(vtx(1, 1), vtx(1, -1)),
+        line(vtx(1, -1), vtx(-1, -1)),
+        line(vtx(-1, -1), vtx(-1, 1)),
+        line(vtx(-1, 1), vtx(1, 1))
     ]
 };
 
@@ -185,7 +185,7 @@ describe('Edges Accessor', () => {
 
         let polygon = new Polygon(vertices);
         let storedA = polygon.edges;
-        storedA[0] = edge(vtx(0, 0), vtx(2, 2));
+        storedA[0] = line(vtx(0, 0), vtx(2, 2));
         let storedB = polygon.edges;
 
         expect(storedB[0]).not.toBe(storedA[0]);
@@ -237,37 +237,37 @@ describe('Copy', () => {
 });
 
 // See https://www.desmos.com/calculator/8rbyeadagn
-describe('Intersect Edge', () => {
-    type TestObject = { polygon: Polygon, edge: Edge, intersections: Vertex[] };
+describe('Intersect Line', () => {
+    type TestObject = { polygon: Polygon, edge: Line, intersections: Vertex[] };
 
     let boomerang = poly(testVertices.boomerang.slice());
 
     let cases: TestObject[] = [
-        { polygon: boomerang, edge: edge(vtx(0, 0), vtx(0, 0)), intersections: [] },
-        { polygon: boomerang, edge: edge(vtx(0, -1), vtx(0, 1)), intersections: [] },
-        { polygon: boomerang, edge: edge(vtx(0, -4), vtx(0, 4)), intersections: [vtx(0, -2), vtx(0, 2)] },
-        { polygon: boomerang, edge: edge(vtx(0, 4), vtx(0, -4)), intersections: [vtx(0, 2), vtx(0, -2)] },
-        { polygon: boomerang, edge: edge(vtx(0, -2), vtx(0, 2)), intersections: [vtx(0, -2), vtx(0, 2)] },
-        { polygon: boomerang, edge: edge(vtx(0, 2), vtx(0, -2)), intersections: [vtx(0, 2), vtx(0, -2)] },
-        { polygon: boomerang, edge: edge(vtx(0, 4), vtx(4, 4)), intersections: [vtx(2, 4), vtx(2.6, 4)] },
-        { polygon: boomerang, edge: edge(vtx(4, 4), vtx(0, 4)), intersections: [vtx(2.6, 4), vtx(2, 4)] },
-        { polygon: boomerang, edge: edge(vtx(-2, 1.5), vtx(4, 3)), intersections: [vtx(0, 2), vtx(2, 2.5)] },
-        { polygon: boomerang, edge: edge(vtx(4, 3), vtx(-2, 1.5)), intersections: [vtx(2, 2.5), vtx(0, 2)] },
-        { polygon: boomerang, edge: edge(vtx(0, 0), vtx(3, 5)), intersections: [vtx(3, 5)] },
-        { polygon: boomerang, edge: edge(vtx(0, 0), vtx(6, 10)), intersections: [vtx(3, 5)] },
-        { polygon: boomerang, edge: edge(vtx(0, 5), vtx(6, 5)), intersections: [vtx(3, 5)] },
-        { polygon: boomerang, edge: edge(vtx(3, 0), vtx(3, 10)), intersections: [vtx(3, 5)] },
-        { polygon: boomerang, edge: edge(vtx(-3, -1), vtx(4, 6)), intersections: [vtx(-2, 0), vtx(3, 5)] },
-        { polygon: boomerang, edge: edge(vtx(-2, 0), vtx(3, 5)), intersections: [vtx(-2, 0), vtx(3, 5)] },
-        { polygon: boomerang, edge: edge(vtx(-1, 1), vtx(2, 4)), intersections: [] },
-        { polygon: boomerang, edge: edge(vtx(2, -5), vtx(2, 5)), intersections: [vtx(2, -4), vtx(2, -2.5), vtx(2, 2.5), vtx(2, 4)] },
-        { polygon: boomerang, edge: edge(vtx(2, 5), vtx(2, -5)), intersections: [vtx(2, 4), vtx(2, 2.5), vtx(2, -2.5), vtx(2, -4)] },
+        { polygon: boomerang, edge: line(vtx(0, 0), vtx(0, 0)), intersections: [] },
+        { polygon: boomerang, edge: line(vtx(0, -1), vtx(0, 1)), intersections: [] },
+        { polygon: boomerang, edge: line(vtx(0, -4), vtx(0, 4)), intersections: [vtx(0, -2), vtx(0, 2)] },
+        { polygon: boomerang, edge: line(vtx(0, 4), vtx(0, -4)), intersections: [vtx(0, 2), vtx(0, -2)] },
+        { polygon: boomerang, edge: line(vtx(0, -2), vtx(0, 2)), intersections: [vtx(0, -2), vtx(0, 2)] },
+        { polygon: boomerang, edge: line(vtx(0, 2), vtx(0, -2)), intersections: [vtx(0, 2), vtx(0, -2)] },
+        { polygon: boomerang, edge: line(vtx(0, 4), vtx(4, 4)), intersections: [vtx(2, 4), vtx(2.6, 4)] },
+        { polygon: boomerang, edge: line(vtx(4, 4), vtx(0, 4)), intersections: [vtx(2.6, 4), vtx(2, 4)] },
+        { polygon: boomerang, edge: line(vtx(-2, 1.5), vtx(4, 3)), intersections: [vtx(0, 2), vtx(2, 2.5)] },
+        { polygon: boomerang, edge: line(vtx(4, 3), vtx(-2, 1.5)), intersections: [vtx(2, 2.5), vtx(0, 2)] },
+        { polygon: boomerang, edge: line(vtx(0, 0), vtx(3, 5)), intersections: [vtx(3, 5)] },
+        { polygon: boomerang, edge: line(vtx(0, 0), vtx(6, 10)), intersections: [vtx(3, 5)] },
+        { polygon: boomerang, edge: line(vtx(0, 5), vtx(6, 5)), intersections: [vtx(3, 5)] },
+        { polygon: boomerang, edge: line(vtx(3, 0), vtx(3, 10)), intersections: [vtx(3, 5)] },
+        { polygon: boomerang, edge: line(vtx(-3, -1), vtx(4, 6)), intersections: [vtx(-2, 0), vtx(3, 5)] },
+        { polygon: boomerang, edge: line(vtx(-2, 0), vtx(3, 5)), intersections: [vtx(-2, 0), vtx(3, 5)] },
+        { polygon: boomerang, edge: line(vtx(-1, 1), vtx(2, 4)), intersections: [] },
+        { polygon: boomerang, edge: line(vtx(2, -5), vtx(2, 5)), intersections: [vtx(2, -4), vtx(2, -2.5), vtx(2, 2.5), vtx(2, 4)] },
+        { polygon: boomerang, edge: line(vtx(2, 5), vtx(2, -5)), intersections: [vtx(2, 4), vtx(2, 2.5), vtx(2, -2.5), vtx(2, -4)] },
     ];
 
     cases.forEach(testCase => {
         let polygon = testCase.polygon.copy(), edge = testCase.edge.copy(), intersections = testCase.intersections.slice();
         it(`should detect the intersections [${intersections}] for the polygon ${polygon} and the edge ${edge}`, () => {
-            let actual = polygon.intersectEdge(edge);
+            let actual = polygon.intersectLine(edge);
             expect(actual.length).toBe(intersections.length);
             for (let i = 0; i < intersections.length; i++) {
                 expect(actual[i].x).toBeCloseTo(intersections[i].x);
@@ -649,18 +649,18 @@ describe('Offset', () => {
 });
 
 describe('From Unordered Edges', () => {
-    type TestObject = { edges: Edge[], polygon: Polygon };
+    type TestObject = { edges: Line[], polygon: Polygon };
 
     let sqv = testVertices.square;
     let twv = testVertices.twisted;
 
     let cases: TestObject[] = [
         {
-            edges: [edge(sqv[0], sqv[1]), edge(sqv[0], sqv[3]), edge(sqv[2], sqv[1]), edge(sqv[2], sqv[3])],
+            edges: [line(sqv[0], sqv[1]), line(sqv[0], sqv[3]), line(sqv[2], sqv[1]), line(sqv[2], sqv[3])],
             polygon: poly([sqv[0], sqv[1], sqv[2], sqv[3]])
         },
         {
-            edges: [edge(twv[3], twv[4]), edge(twv[1], twv[0]), edge(twv[0], twv[5]), edge(twv[5], twv[4]), edge(twv[2], twv[1]), edge(twv[2], twv[3])],
+            edges: [line(twv[3], twv[4]), line(twv[1], twv[0]), line(twv[0], twv[5]), line(twv[5], twv[4]), line(twv[2], twv[1]), line(twv[2], twv[3])],
             polygon: poly([twv[3], twv[4], twv[5], twv[0], twv[1], twv[2]])
         },
     ];
@@ -675,16 +675,16 @@ describe('From Unordered Edges', () => {
 });
 
 describe('Hatch Fill', () => {
-    type TestObject = { polygon: Polygon, angle: number, spacing: number, jitter: (x: number) => number, edges: Edge[] };
+    type TestObject = { polygon: Polygon, angle: number, spacing: number, jitter: (x: number) => number, edges: Line[] };
 
     let cases: TestObject[] = [
-        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => 0, edges: [edge(vtx(-1, -1), vtx(1, -1)), edge(vtx(-1, 0), vtx(1, 0)), edge(vtx(-1, 1), vtx(1, 1))] },
-        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 1, jitter: (x) => 0, edges: [edge(vtx(Math.sqrt(2) - 1, -1), vtx(1, -Math.sqrt(2) + 1)), edge(vtx(-1, -1), vtx(1, 1)), edge(vtx(-1, Math.sqrt(2) - 1), vtx(-Math.sqrt(2) + 1, 1))] },
-        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 2, jitter: (x) => 0, edges: [edge(vtx(-1, -1), vtx(1, 1))] },
-        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 1 / 2, jitter: (x) => 0, edges: [edge(vtx(Math.sqrt(2) - 1, -1), vtx(1, -Math.sqrt(2) + 1)), edge(vtx(-1 + Math.sqrt(2) / 2, -1), vtx(1, 1 - Math.sqrt(2) / 2)), edge(vtx(-1, -1), vtx(1, 1)), edge(vtx(-1, -1 + Math.sqrt(2) / 2), vtx(1 - Math.sqrt(2) / 2, 1)), edge(vtx(-1, Math.sqrt(2) - 1), vtx(-Math.sqrt(2) + 1, 1))] },
-        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => 0.5, edges: [edge(vtx(-1, -0.5), vtx(1, -0.5)), edge(vtx(-1, 0.5), vtx(1, 0.5))] },
-        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => -0.5, edges: [edge(vtx(-1, -0.5), vtx(1, -0.5)), edge(vtx(-1, 0.5), vtx(1, 0.5))] },
-        { polygon: poly(testVertices.farOffsetSquare), angle: 0, spacing: 1, jitter: (x) => 0.5, edges: [edge(vtx(8, 8.5), vtx(10, 8.5)), edge(vtx(8, 9.5), vtx(10, 9.5))] },
+        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => 0, edges: [line(vtx(-1, -1), vtx(1, -1)), line(vtx(-1, 0), vtx(1, 0)), line(vtx(-1, 1), vtx(1, 1))] },
+        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 1, jitter: (x) => 0, edges: [line(vtx(Math.sqrt(2) - 1, -1), vtx(1, -Math.sqrt(2) + 1)), line(vtx(-1, -1), vtx(1, 1)), line(vtx(-1, Math.sqrt(2) - 1), vtx(-Math.sqrt(2) + 1, 1))] },
+        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 2, jitter: (x) => 0, edges: [line(vtx(-1, -1), vtx(1, 1))] },
+        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 1 / 2, jitter: (x) => 0, edges: [line(vtx(Math.sqrt(2) - 1, -1), vtx(1, -Math.sqrt(2) + 1)), line(vtx(-1 + Math.sqrt(2) / 2, -1), vtx(1, 1 - Math.sqrt(2) / 2)), line(vtx(-1, -1), vtx(1, 1)), line(vtx(-1, -1 + Math.sqrt(2) / 2), vtx(1 - Math.sqrt(2) / 2, 1)), line(vtx(-1, Math.sqrt(2) - 1), vtx(-Math.sqrt(2) + 1, 1))] },
+        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => 0.5, edges: [line(vtx(-1, -0.5), vtx(1, -0.5)), line(vtx(-1, 0.5), vtx(1, 0.5))] },
+        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => -0.5, edges: [line(vtx(-1, -0.5), vtx(1, -0.5)), line(vtx(-1, 0.5), vtx(1, 0.5))] },
+        { polygon: poly(testVertices.farOffsetSquare), angle: 0, spacing: 1, jitter: (x) => 0.5, edges: [line(vtx(8, 8.5), vtx(10, 8.5)), line(vtx(8, 9.5), vtx(10, 9.5))] },
     ];
 
     cases.forEach(testCase => {
@@ -693,7 +693,7 @@ describe('Hatch Fill', () => {
             let actual = polygon.hatchFill(angle, spacing, jitter, () => 0);
             expect(actual.length).toBe(edges.length);
             for (let i = 0; i < actual.length; i++) {
-                expectEdgeEquivalency(actual[i], edges[i]);
+                expectLineEquivalency(actual[i], edges[i]);
             }
         });
     });
