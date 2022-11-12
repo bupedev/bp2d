@@ -1,5 +1,5 @@
 import { line, Line } from "./line"
-import { Vector } from "./vector"
+import { Vector, vec } from "./vector"
 import { Vertex, vtx } from "./vertex";
 import { mod } from "./../utility/numerics"
 
@@ -427,6 +427,38 @@ export class Polygon {
             if (distance > maxDistance) maxDistance = distance;
         });
         return maxDistance;
+    }
+
+    /**
+     * Creates a regular polygon with a specified number of edges.
+     * @param order The number of edges for the polygon
+     * @param centre The centre of the polygon. If left undefined, the centre will default to the origin.
+     * @param scale The distance from the centre of the polygon to each of the vertices. If left undefined, the scale will be 1.0.
+     * @param rotation The rotation of the polygon around it's centre measured in radians. The first polygon vertex will lie on (1, 0) unless rotated. If left undefined, the rotation will be 0.0.
+     * @returns A regular (equal edge sizes and angles) polygon
+     */
+    public static createRegular(order: number, centre: Vertex | undefined = undefined, scale: number | undefined = undefined, rotation: number | undefined = undefined): Polygon {
+        let vertices: Vertex[] = [];
+
+        if (!centre) {
+            centre = vtx(0, 0);
+        }
+
+        if (!scale) {
+            scale = 1.0;
+        }
+
+        if (!rotation) {
+            rotation = 0.0;
+        }
+
+        let vertexVector = vec(1, 0).scale(scale).rotate(rotation);
+        let segmentRotation = 2 * Math.PI / order;
+        for (let i = 0; i < order; i++) {
+            vertices.push(Vertex.displace(centre, vertexVector));
+            vertexVector.rotate(segmentRotation);
+        }
+        return poly(vertices);
     }
 }
 

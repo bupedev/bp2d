@@ -698,3 +698,25 @@ describe('Hatch Fill', () => {
         });
     });
 });
+
+describe('Create Regular', () => {
+    type TestObject = { order: number, centre: Vertex | undefined, scale: number | undefined, rotation: number | undefined, regular: Polygon };
+
+    let cases: TestObject[] = [
+        { order: 0, centre: undefined, scale: undefined, rotation: undefined, regular: poly([]) },
+        { order: 1, centre: undefined, scale: undefined, rotation: undefined, regular: poly([vtx(1, 0)]) },
+        { order: 2, centre: undefined, scale: undefined, rotation: undefined, regular: poly([vtx(1, 0), vtx(-1, 0)]) },
+        { order: 4, centre: undefined, scale: undefined, rotation: undefined, regular: poly([vtx(1, 0), vtx(0, 1), vtx(-1, 0), vtx(0, -1)]) },
+        { order: 4, centre: vtx(1, 0), scale: undefined, rotation: undefined, regular: poly([vtx(2, 0), vtx(1, 1), vtx(0, 0), vtx(1, -1)]) },
+        { order: 4, centre: undefined, scale: 2.0, rotation: undefined, regular: poly([vtx(2, 0), vtx(0, 2), vtx(-2, 0), vtx(0, -2)]) },
+        { order: 4, centre: undefined, scale: undefined, rotation: Math.PI / 2, regular: poly([vtx(0, 1), vtx(-1, 0), vtx(0, -1), vtx(1, 0)]) },
+    ];
+
+    cases.forEach(testCase => {
+        let order = testCase.order, centre = testCase.centre, scale = testCase.scale, rotation = testCase.rotation, regular = testCase.regular;
+        it(`should be [${regular}] when the order is ${order}, the centre is ${centre}, the scale is ${scale} and the rotation is ${rotation}`, () => {
+            let actual = Polygon.createRegular(order, centre, scale, rotation);
+            expectPolygonEquivalency(actual, regular);
+        });
+    })
+});
