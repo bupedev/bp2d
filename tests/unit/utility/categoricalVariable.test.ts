@@ -47,7 +47,7 @@ describe('Categories Accessor', () => {
         let instance = { ...colors };
         let cv = new CategoricalVariable(instance);
         let storedA = cv.categories;
-        storedA[0] = null;
+        storedA[0] = "rainbow";
         let storedB = cv.categories;
 
         expect(storedA[0]).not.toBe(storedB[0]);
@@ -68,7 +68,7 @@ describe('Weights Accessor', () => {
         let instance = { ...colors };
         let cv = new CategoricalVariable(instance);
         let storedA = cv.weights;
-        storedA[0] = null;
+        storedA[0] = 10;
         let storedB = cv.weights;
 
         expect(storedA[0]).not.toBe(storedB[0]);

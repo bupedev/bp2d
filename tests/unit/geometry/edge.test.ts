@@ -140,19 +140,19 @@ describe('Length', () => {
 });
 
 describe('Intersect Edge', () => {
-    type TestObject = { edgeA: Edge, edgeB: Edge, intersect: Vertex };
+    type TestObject = { edgeA: Edge, edgeB: Edge, intersect: Vertex | undefined };
 
     let cases: TestObject[] = [
-        { edgeA: edge(vtx(0, 0), vtx(0, 0)), edgeB: edge(vtx(0, 0), vtx(0, 0)), intersect: null },
+        { edgeA: edge(vtx(0, 0), vtx(0, 0)), edgeB: edge(vtx(0, 0), vtx(0, 0)), intersect: undefined },
         { edgeA: edge(vtx(-1, -1), vtx(1, 1)), edgeB: edge(vtx(-1, 1), vtx(1, -1)), intersect: vtx(0, 0) },
         { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(2, 3)), intersect: vtx(1, 1) },
-        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(0, -1)), intersect: null },
-        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-2, -1), vtx(4, 1)), intersect: null },
-        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-2, 0), vtx(4, 2)), intersect: null },
+        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(0, -1)), intersect: undefined },
+        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-2, -1), vtx(4, 1)), intersect: undefined },
+        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-2, 0), vtx(4, 2)), intersect: undefined },
     ];
 
     cases.forEach(testCase => {
-        let edgeA = testCase.edgeA.copy(), edgeB = testCase.edgeB.copy(), intersect = testCase.intersect ? testCase.intersect.copy() : null;
+        let edgeA = testCase.edgeA.copy(), edgeB = testCase.edgeB.copy(), intersect = testCase.intersect;
         it(`should be ${intersect} when the edges are ${edgeA} and ${edgeB}`, () => {
             let i = edgeA.intersectEdge(edgeB);
             if (intersect) {
