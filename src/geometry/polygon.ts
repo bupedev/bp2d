@@ -346,6 +346,50 @@ export class Polygon {
         let splitSegments = poly(rawOffsetVertices).overlapSplit();
         return splitSegments.filter((segment) => segment.clockwise == this.clockwise);
     }
+
+    /**
+     * Generates hatching lines within the bounds of the polygon with specified angle and spacing configuration.
+     * @param angle The angle of the hatch lines within the polygon.
+     * @param spacing The desired spacing between hatch lines.
+     * @param jitter A function that generates jitter for each hatch line, this function must accept values between 0 and 1 and 
+     *               map them to values -1 and 1.
+     * @param randomizer A randomization function to use as the input for the jitter function that returns values between 0 and 1.
+     * @returns An array of edges representing the hatch lines within the polygon
+     */
+    public hatchFill(angle: number, spacing: number, jitter: (x: number) => number, randomizer: () => number): Edge[] {
+        let maxAnchorDistance = this.getMaxAnchorDistance();
+        let steps = Math.floor(maxAnchorDistance / spacing); 
+        let grain = Vector.unit(angle);
+        let ortho = grain.copy().rotate(Math.PI/2);
+        let candidates = []; 
+        for(let offset = -steps; offset <= steps; offset++) {
+            let edgeShift = Vector.scale(ortho, spacing * (offset + jitter(randomizer())));
+            let control = this.anchor.toVector().add(edgeShift);
+            candidates.push(
+                edge(
+                    Vector.add(control, Vector.scale(grain, -maxAnchorDistance * 2)).toVertex(), 
+                    Vector.add(control, Vector.scale(grain, +maxAnchorDistance * 2)).toVertex()));
+        }
+
+        let hatchLines = [];
+        candidates.forEach(candidate => {
+            let intersections = this.intersectEdge(candidate);
+            for (let i = 0; i < intersections.length - 1; i += 2) {
+                hatchLines.push(edge(intersections[i], intersections[i + 1]));
+            }
+        });
+
+        return hatchLines;
+    }
+
+    private getMaxAnchorDistance(): number {
+        let maxDistance = 0;
+        this._vertices.forEach(vertex => {
+            let distance = this.anchor.distanceTo(vertex);
+            if (distance > maxDistance) maxDistance = distance;
+        });
+        return maxDistance;
+    }
 }
 
 export function poly(vertices: Vertex[]): Polygon {

@@ -9,7 +9,12 @@ function expectPolygonEquivalency(actual: Polygon, expected: Polygon): void {
 
 function expectPolygonInequality(actual: Polygon, expected: Polygon): void {
     expect(actual.vertices.length).toBe(expected.vertices.length);
-    expect(actual.vertices.every((vertex, index) => {vertex.isEquivalentTo(expected.vertices[index])})).toBeFalsy();
+    expect(actual.vertices.every((vertex, index) => { vertex.isEquivalentTo(expected.vertices[index]) })).toBeFalsy();
+}
+
+function expectEdgeEquivalency(actual: Edge, expected: Edge): void {
+    expect(actual.start.isEquivalentTo(expected.start)).toBeTruthy();
+    expect(actual.end.isEquivalentTo(expected.end)).toBeTruthy();
 }
  
 let testVertices = {
@@ -18,6 +23,12 @@ let testVertices = {
         vtx(1, -1),
         vtx(-1, -1),
         vtx(-1, 1),
+    ],
+    "farOffsetSquare": [
+        vtx(10, 10),
+        vtx(10, 8),
+        vtx(8, 8),
+        vtx(8, 10),
     ],
     "offsetSquare": [
         vtx(1, 1),
@@ -632,6 +643,31 @@ describe('Offset', () => {
             expect(actual.length).toBe(offsetSegments.length);
             for (let i = 0; i < actual.length; i++) {
                 expectPolygonEquivalency(actual[i], offsetSegments[i]);
+            }
+        });
+    });
+});
+
+describe('Hatch Fill', () => {
+    type TestObject = { polygon: Polygon, angle: number, spacing: number, jitter: (x: number) => number, edges: Edge[] };
+
+    let cases: TestObject[] = [
+        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => 0, edges: [edge(vtx(-1, -1), vtx(1, -1)), edge(vtx(-1, 0), vtx(1, 0)), edge(vtx(-1, 1), vtx(1, 1))] },
+        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 1, jitter: (x) => 0, edges: [edge(vtx(Math.sqrt(2) - 1, -1), vtx(1, -Math.sqrt(2) + 1)), edge(vtx(-1, -1), vtx(1, 1)), edge(vtx(-1, Math.sqrt(2) - 1), vtx(-Math.sqrt(2) + 1, 1))] },
+        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 2, jitter: (x) => 0, edges: [edge(vtx(-1, -1), vtx(1, 1))] },
+        { polygon: poly(testVertices.square), angle: Math.PI / 4, spacing: 1 / 2, jitter: (x) => 0, edges: [edge(vtx(Math.sqrt(2) - 1, -1), vtx(1, -Math.sqrt(2) + 1)), edge(vtx(-1 + Math.sqrt(2) / 2, -1), vtx(1, 1 - Math.sqrt(2) / 2)), edge(vtx(-1, -1), vtx(1, 1)), edge(vtx(-1, -1 + Math.sqrt(2) / 2), vtx(1 - Math.sqrt(2) / 2, 1)), edge(vtx(-1, Math.sqrt(2) - 1), vtx(-Math.sqrt(2) + 1, 1))] },
+        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => 0.5, edges: [edge(vtx(-1, -0.5), vtx(1, -0.5)), edge(vtx(-1, 0.5), vtx(1, 0.5))] },
+        { polygon: poly(testVertices.square), angle: 0, spacing: 1, jitter: (x) => -0.5, edges: [edge(vtx(-1, -0.5), vtx(1, -0.5)), edge(vtx(-1, 0.5), vtx(1, 0.5))] },
+        { polygon: poly(testVertices.farOffsetSquare), angle: 0, spacing: 1, jitter: (x) => 0.5, edges: [edge(vtx(8, 8.5), vtx(10, 8.5)), edge(vtx(8, 9.5), vtx(10, 9.5))] },
+    ];
+
+    cases.forEach(testCase => {
+        let polygon = testCase.polygon, angle = testCase.angle, spacing = testCase.spacing, jitter = testCase.jitter, edges = testCase.edges.slice();
+        it(`should be [${edges.join(", ")}] when the polygon is ${polygon}, angle is ${angle}, spacing is ${spacing} and jitter is ${jitter.toString()}`, () => {
+            let actual = polygon.hatchFill(angle, spacing, jitter, () => 0);
+            expect(actual.length).toBe(edges.length);
+            for (let i = 0; i < actual.length; i++) {
+                expectEdgeEquivalency(actual[i], edges[i]);
             }
         });
     });
