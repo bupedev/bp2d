@@ -26,7 +26,7 @@ describe('Constructor', () => {
         let categories = cv.categories;
         let weights = cv.weights;
 
-        for(let category in colors) {
+        for (let category in colors) {
             let categoryIndex = categories.findIndex(c => c == category);
             expect(weights[categoryIndex]).toBe(colors[category] / total);
         }
@@ -77,27 +77,27 @@ describe('Weights Accessor', () => {
 
 describe('Get Category', () => {
     let expected = {
-        0.01 : "blue",
-        0.06 : "blue",
-        0.11 : "blue",
-        0.16 : "blue",
-        0.21 : "blue",
-        0.26 : "blue",
-        0.31 : "red",
-        0.36 : "red",
-        0.41 : "green",
-        0.46 : "green",
-        0.51 : "green",
-        0.56 : "green",
-        0.61 : "white",
-        0.66 : "white",
-        0.71 : "white",
-        0.76 : "white",
-        0.81 : "white",
-        0.86 : "white",
-        0.91 : "white",
-        0.96 : "white",
-        1.00 : "white",
+        0.01: "blue",
+        0.06: "blue",
+        0.11: "blue",
+        0.16: "blue",
+        0.21: "blue",
+        0.26: "blue",
+        0.31: "red",
+        0.36: "red",
+        0.41: "green",
+        0.46: "green",
+        0.51: "green",
+        0.56: "green",
+        0.61: "white",
+        0.66: "white",
+        0.71: "white",
+        0.76: "white",
+        0.81: "white",
+        0.86: "white",
+        0.91: "white",
+        0.96: "white",
+        1.00: "white",
     };
 
     Object.keys(expected).forEach(valueString => {
@@ -112,12 +112,12 @@ describe('Get Category', () => {
 
 describe('Get Weight', () => {
     let expected = {
-        "blue": 3/10,
-        "red": 1/10,
-        "green": 2/10,
-        "white": 4/10
+        "blue": 3 / 10,
+        "red": 1 / 10,
+        "green": 2 / 10,
+        "white": 4 / 10
     };
-    
+
     Object.keys(expected).forEach(category => {
         let weighting = expected[category];
         it(`should provide the normalized weighting ${weighting} when the category is ${category}`, () => {

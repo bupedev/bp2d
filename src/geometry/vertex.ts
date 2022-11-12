@@ -66,7 +66,7 @@ export class Vertex {
         let translated = Vertex.translate(this, x, y);
         this.x = translated.x;
         this.y = translated.y;
-        return this; 
+        return this;
     }
 
     /**
@@ -193,8 +193,8 @@ export class Vertex {
      * @returns True if the this vertex is equivalent to the other vertex, false otherwise.
      */
     public isEquivalentTo(vertex: Vertex): Boolean {
-        return Math.abs(this.x - vertex.x) < Vertex.PRECISION_THRESHOLD && 
-               Math.abs(this.y - vertex.y) < Vertex.PRECISION_THRESHOLD;
+        return Math.abs(this.x - vertex.x) < Vertex.PRECISION_THRESHOLD &&
+            Math.abs(this.y - vertex.y) < Vertex.PRECISION_THRESHOLD;
     }
 
     /**

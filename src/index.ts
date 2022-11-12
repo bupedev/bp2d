@@ -4,10 +4,10 @@ import { edge, Edge } from './geometry/edge';
 import { poly, Polygon } from './geometry/polygon';
 import { CategoricalVariable } from './utility/categoricalVariable';
 
-export { 
+export {
     CategoricalVariable,
-    Vector, 
-    Vertex, 
+    Vector,
+    Vertex,
     Edge,
     Polygon,
     vec,

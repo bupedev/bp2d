@@ -51,12 +51,12 @@ export class Polygon {
 
     private static processVertices(vertices: Vertex[]): Vertex[] {
         let processed = [];
-        if(vertices.length == 0) {
+        if (vertices.length == 0) {
             return processed;
         }
-        
-        for(let i = 0; i + 1 < vertices.length; i++) {
-            if(vertices[i].isEquivalentTo(vertices[i+1])) {
+
+        for (let i = 0; i + 1 < vertices.length; i++) {
+            if (vertices[i].isEquivalentTo(vertices[i + 1])) {
                 continue;
             }
             else {
@@ -64,11 +64,11 @@ export class Polygon {
             }
         }
 
-        if(!vertices[vertices.length - 1].isEquivalentTo(vertices[0])){
+        if (!vertices[vertices.length - 1].isEquivalentTo(vertices[0])) {
             processed.push(vertices[vertices.length - 1].copy());
         }
 
-        if(processed.length == 0 && vertices.length > 0) {
+        if (processed.length == 0 && vertices.length > 0) {
             processed.push(vertices[0].copy());
         }
 
@@ -78,8 +78,8 @@ export class Polygon {
     private static calculateEdges(vertices: Vertex[]): Edge[] {
         let edges: Edge[] = [];
 
-        if(vertices.length < 2) {
-            return edges;    
+        if (vertices.length < 2) {
+            return edges;
         }
 
         for (let i = 0; i + 1 < vertices.length; i++) {
@@ -87,14 +87,14 @@ export class Polygon {
         }
 
         edges.push(edge(vertices[vertices.length - 1], vertices[0]));
-        
+
         return edges;
     }
 
     private static calculateAngularSum(edges: Edge[]): number {
         let sum = 0;
 
-        if(edges.length < 1) {
+        if (edges.length < 1) {
             return sum;
         }
 
@@ -110,13 +110,13 @@ export class Polygon {
         let N = vertices.length;
         switch (N) {
             case 0:
-                return vtx(0, 0);       
+                return vtx(0, 0);
             case 1:
                 return vertices[0];
         }
 
         let A = 0;
-        for(let i = 0; i < N; i++) {
+        for (let i = 0; i < N; i++) {
             let v0 = vertices[mod(i, vertices.length)];
             let v1 = vertices[mod(i + 1, N)];
             A += (v0.x * v1.y - v0.y * v1.x);
@@ -125,7 +125,7 @@ export class Polygon {
 
         let Cx = 0;
         let Cy = 0;
-        for(let i = 0; i < N; i++) {
+        for (let i = 0; i < N; i++) {
             let v0 = vertices[mod(i, vertices.length)];
             let v1 = vertices[mod(i + 1, N)];
             Cx += (v0.x + v1.x) * (v0.x * v1.y - v0.y * v1.x);
@@ -396,16 +396,16 @@ export class Polygon {
      */
     public hatchFill(angle: number, spacing: number, jitter: (x: number) => number, randomizer: () => number): Edge[] {
         let maxAnchorDistance = this.getMaxAnchorDistance();
-        let steps = Math.floor(maxAnchorDistance / spacing); 
+        let steps = Math.floor(maxAnchorDistance / spacing);
         let grain = Vector.unit(angle);
-        let ortho = grain.copy().rotate(Math.PI/2);
-        let candidates = []; 
-        for(let offset = -steps; offset <= steps; offset++) {
+        let ortho = grain.copy().rotate(Math.PI / 2);
+        let candidates = [];
+        for (let offset = -steps; offset <= steps; offset++) {
             let edgeShift = Vector.scale(ortho, spacing * (offset + jitter(randomizer())));
             let control = this.anchor.toVector().add(edgeShift);
             candidates.push(
                 edge(
-                    Vector.add(control, Vector.scale(grain, -maxAnchorDistance * 2)).toVertex(), 
+                    Vector.add(control, Vector.scale(grain, -maxAnchorDistance * 2)).toVertex(),
                     Vector.add(control, Vector.scale(grain, +maxAnchorDistance * 2)).toVertex()));
         }
 

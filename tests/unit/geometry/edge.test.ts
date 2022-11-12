@@ -90,12 +90,12 @@ describe('Normal', () => {
     let cases: TestObject[] = [
         { edge: edge(vtx(0, 0), vtx(0, 0)), clockwise: false, normal: vec(0, 0) },
         { edge: edge(vtx(0, 0), vtx(0, 0)), clockwise: true, normal: vec(0, 0) },
-        { edge: edge(vtx(0, 0), vtx(1, 1)), clockwise: false, normal: vec(1/(2**0.5), -1/(2**0.5)) },
-        { edge: edge(vtx(0, 0), vtx(1, 1)), clockwise: true, normal: vec(-1/(2**0.5), 1/(2**0.5)) },
-        { edge: edge(vtx(2, 3), vtx(-1, 7)), clockwise: false, normal: vec(4/5, 3/5) },
-        { edge: edge(vtx(2, 3), vtx(-1, 7)), clockwise: true, normal: vec(-4/5, -3/5) },
-        { edge: edge(vtx(-1, -4), vtx(3, -1)), clockwise: false, normal: vec(3/5, -4/5) },
-        { edge: edge(vtx(-1, -4), vtx(3, -1)), clockwise: true, normal: vec(-3/5, 4/5) },
+        { edge: edge(vtx(0, 0), vtx(1, 1)), clockwise: false, normal: vec(1 / (2 ** 0.5), -1 / (2 ** 0.5)) },
+        { edge: edge(vtx(0, 0), vtx(1, 1)), clockwise: true, normal: vec(-1 / (2 ** 0.5), 1 / (2 ** 0.5)) },
+        { edge: edge(vtx(2, 3), vtx(-1, 7)), clockwise: false, normal: vec(4 / 5, 3 / 5) },
+        { edge: edge(vtx(2, 3), vtx(-1, 7)), clockwise: true, normal: vec(-4 / 5, -3 / 5) },
+        { edge: edge(vtx(-1, -4), vtx(3, -1)), clockwise: false, normal: vec(3 / 5, -4 / 5) },
+        { edge: edge(vtx(-1, -4), vtx(3, -1)), clockwise: true, normal: vec(-3 / 5, 4 / 5) },
     ];
 
     cases.forEach(testCase => {
@@ -143,12 +143,12 @@ describe('Intersect Edge', () => {
     type TestObject = { edgeA: Edge, edgeB: Edge, intersect: Vertex };
 
     let cases: TestObject[] = [
-        {edgeA: edge(vtx(0, 0),   vtx(0, 0)), edgeB: edge(vtx(0, 0),   vtx(0, 0)), intersect: null},
-        {edgeA: edge(vtx(-1, -1), vtx(1, 1)), edgeB: edge(vtx(-1, 1),  vtx(1, -1)), intersect: vtx(0,0)},
-        {edgeA: edge(vtx(-2, 0),  vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(2, 3)), intersect: vtx(1,1)},
-        {edgeA: edge(vtx(-2, 0),  vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(0, -1)), intersect: null},
-        {edgeA: edge(vtx(-2, 0),  vtx(4, 2)), edgeB: edge(vtx(-2, -1), vtx(4, 1)), intersect: null},
-        {edgeA: edge(vtx(-2, 0),  vtx(4, 2)), edgeB: edge(vtx(-2, 0),  vtx(4, 2)), intersect: null},
+        { edgeA: edge(vtx(0, 0), vtx(0, 0)), edgeB: edge(vtx(0, 0), vtx(0, 0)), intersect: null },
+        { edgeA: edge(vtx(-1, -1), vtx(1, 1)), edgeB: edge(vtx(-1, 1), vtx(1, -1)), intersect: vtx(0, 0) },
+        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(2, 3)), intersect: vtx(1, 1) },
+        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-1, -3), vtx(0, -1)), intersect: null },
+        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-2, -1), vtx(4, 1)), intersect: null },
+        { edgeA: edge(vtx(-2, 0), vtx(4, 2)), edgeB: edge(vtx(-2, 0), vtx(4, 2)), intersect: null },
     ];
 
     cases.forEach(testCase => {
