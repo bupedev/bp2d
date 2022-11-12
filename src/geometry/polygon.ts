@@ -348,6 +348,44 @@ export class Polygon {
     }
 
     /**
+     * Creates a polygon from a collection of unordered edges. This method operates under the assumption that each edge is 
+     * connected to two other edges in the collection with no particular ordering or direction.
+     * @param edges The collection of unordered edges. 
+     * @returns A polygon created by sorting the vertices of the unordered edges.
+     */
+    public static fromUnorderedEdges(edges: Edge[]): Polygon {
+        let vertices = [edges[0].start];
+        let useEnd = true;
+        let targetIndex = 0;
+        let bannedIndices = [];
+        let edgeCount = edges.length;
+        while (vertices.length < edgeCount) {
+            bannedIndices.push(targetIndex);
+            let target = edges[targetIndex];
+            let next = useEnd ? target.end : target.start;
+            for (let potentialIndex = 0; potentialIndex < edges.length; potentialIndex++) {
+                if (bannedIndices.includes(potentialIndex) || potentialIndex == targetIndex) continue;
+                let potential = edges[potentialIndex];
+                if (next.isEquivalentTo(potential.start)) {
+                    bannedIndices.push(potentialIndex);
+                    targetIndex = potentialIndex;
+                    vertices.push(potential.start);
+                    useEnd = true;
+                    break;
+                }
+                if (next.isEquivalentTo(potential.end)) {
+                    bannedIndices.push(potentialIndex);
+                    targetIndex = potentialIndex;
+                    vertices.push(potential.end);
+                    useEnd = false;
+                    break;
+                }
+            }
+        }
+        return poly(vertices);
+    }
+
+    /**
      * Generates hatching lines within the bounds of the polygon with specified angle and spacing configuration.
      * @param angle The angle of the hatch lines within the polygon.
      * @param spacing The desired spacing between hatch lines.

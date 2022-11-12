@@ -648,6 +648,32 @@ describe('Offset', () => {
     });
 });
 
+describe('From Unordered Edges', () => {
+    type TestObject = { edges: Edge[], polygon: Polygon };
+
+    let sqv = testVertices.square;
+    let twv = testVertices.twisted;
+
+    let cases: TestObject[] = [
+        {
+            edges: [edge(sqv[0], sqv[1]), edge(sqv[0], sqv[3]), edge(sqv[2], sqv[1]), edge(sqv[2], sqv[3])],
+            polygon: poly([sqv[0], sqv[1], sqv[2], sqv[3]])
+        },
+        {
+            edges: [edge(twv[3], twv[4]), edge(twv[1], twv[0]), edge(twv[0], twv[5]), edge(twv[5], twv[4]), edge(twv[2], twv[1]), edge(twv[2], twv[3])],
+            polygon: poly([twv[3], twv[4], twv[5], twv[0], twv[1], twv[2]])
+        },
+    ];
+
+    cases.forEach(testCase => {
+        let edges = testCase.edges, polygon = testCase.polygon;
+        it(`should be ${polygon} when the edges are {${edges.join(", ")}}`, () => {
+            let actual = Polygon.fromUnorderedEdges(edges);
+            expectPolygonEquivalency(actual, polygon);
+        });
+    });
+});
+
 describe('Hatch Fill', () => {
     type TestObject = { polygon: Polygon, angle: number, spacing: number, jitter: (x: number) => number, edges: Edge[] };
 
