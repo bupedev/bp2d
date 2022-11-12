@@ -81,6 +81,27 @@ export class Vertex {
     }
 
     /**
+     * Moves the vertex by some displacement vector.
+     * @param vector The vector by which to displace the vertex.
+     * @returns The vertex after translation.
+     */
+    public displace(vector: Vector): Vertex {
+        let displaced = Vertex.displace(this, vector);
+        this.x = displaced.x;
+        this.y = displaced.y;
+        return this;
+    }
+
+    /**
+     * Moves the vertex by some displacement vector.
+     * @param vector The vector by which to displace the vertex.
+     * @returns The vertex after translation.
+     */
+     public static displace(vertex: Vertex, vector: Vector): Vertex {
+        return vertex.toVector().add(vector).toVertex();
+    }
+
+    /**
      * Scales the distance between the vertex and some control point.
      * @param factor The scaling factor.
      * @param control The point from which to scale the vertex, the origin by default.

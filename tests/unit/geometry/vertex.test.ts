@@ -502,7 +502,6 @@ describe('Equivalency', () => {
     });
 });
 
-
 describe('Mean', () => {
     type TestObject = { vertices: Vertex[], mean: Vertex };
 
@@ -520,5 +519,54 @@ describe('Mean', () => {
             expect(actual.x).toBeCloseTo(mean.x);
             expect(actual.y).toBeCloseTo(mean.y);
         });
+    });
+});
+
+describe('Displace', () => {
+    type TestObject = { vertex: Vertex, vector: Vector, displaced: Vertex };
+
+    let cases: TestObject[] = [
+        { vertex: vtx(0, 0), vector: vec(0, 0), displaced: vtx(0, 0) },
+        { vertex: vtx(0, 0), vector: vec(1, 2), displaced: vtx(1, 2) },
+        { vertex: vtx(1, 2), vector: vec(0, 0), displaced: vtx(1, 2) },
+        { vertex: vtx(1, 2), vector: vec(1, 2), displaced: vtx(2, 4) },
+    ];
+    
+    let baseCase = cases[3];
+
+    cases.forEach(testCase => {
+        let vertex = testCase.vertex.copy(), vector = testCase.vector, displaced = testCase.displaced;
+        it(`should be ${displaced} when the vertex is ${vertex} and the vector is ${vector} (instance)`, () => {
+            let actual = vertex.displace(vector);
+            expect(actual.x).toBeCloseTo(displaced.x);
+            expect(actual.y).toBeCloseTo(displaced.y);
+        });
+    });
+    
+    cases.forEach(testCase => {
+        let vertex = testCase.vertex.copy(), vector = testCase.vector, displaced = testCase.displaced;
+        it(`should be ${displaced} when the vertex is ${vertex} and the vector is ${vector} (static)`, () => {
+            let actual = Vertex.displace(vertex, vector);
+            expect(actual.x).toBeCloseTo(displaced.x);
+            expect(actual.y).toBeCloseTo(displaced.y);
+        });
+    });
+    
+    it('should return the displaced instance when called on an object', () => {
+        let u = baseCase.vertex.copy();
+        let v = baseCase.vector;
+
+        let w = u.displace(v);
+        expect(u.x).toBe(w.x);
+        expect(u.y).toBe(w.y);
+    });
+
+    it('should not mutate the vertex when called statically', () => {
+        let u = baseCase.vertex.copy();
+        let v = baseCase.vector;
+
+        let w = Vertex.displace(u, v);
+        expect(u.x).not.toBe(w.x);
+        expect(u.y).not.toBe(w.y);
     });
 });
