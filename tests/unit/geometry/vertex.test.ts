@@ -502,3 +502,23 @@ describe('Equivalency', () => {
     });
 });
 
+
+describe('Mean', () => {
+    type TestObject = { vertices: Vertex[], mean: Vertex };
+
+    let cases: TestObject[] = [
+        { vertices: [vtx(0, 0)], mean: vtx(0, 0) },
+        { vertices: [vtx(1, 2)], mean: vtx(1, 2) },
+        { vertices: [vtx(1, 2), vtx(1, 2), vtx(1, 2)], mean: vtx(1, 2) },
+        { vertices: [vtx(1, 2), vtx(-1, -2)], mean: vtx(0, 0) },
+    ];
+
+    cases.forEach(testCase => {
+        let vertices = testCase.vertices.slice(), mean = testCase.mean.copy();
+        it(`should be ${mean} when the vertices are ${vertices}`, () => {
+            let actual = Vertex.mean(vertices);
+            expect(actual.x).toBeCloseTo(mean.x);
+            expect(actual.y).toBeCloseTo(mean.y);
+        });
+    });
+});
