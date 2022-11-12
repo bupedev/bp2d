@@ -1,6 +1,6 @@
 import { edge, Edge } from "./edge"
 import { Vector } from "./vector"
-import { Vertex } from "./vertex";
+import { Vertex, vtx } from "./vertex";
 import { mod } from "./../utility/numerics"
 
 /**
@@ -43,29 +43,98 @@ export class Polygon {
      * @param vertices 
      */
     constructor(vertices: Vertex[]) {
-        this._vertices = vertices.slice();
+        this._vertices = Polygon.processVertices(vertices);
         this._edges = Polygon.calculateEdges(this._vertices);
         this._clockwise = Polygon.calculateAngularSum(this._edges) < 0;
-        this.anchor = Vertex.mean(vertices);
+        this.anchor = Polygon.calculateVertexCentroid(this._vertices);
+    }
+
+    private static processVertices(vertices: Vertex[]): Vertex[] {
+        let processed = [];
+        if(vertices.length == 0) {
+            return processed;
+        }
+        
+        for(let i = 0; i + 1 < vertices.length; i++) {
+            if(vertices[i].isEquivalentTo(vertices[i+1])) {
+                continue;
+            }
+            else {
+                processed.push(vertices[i].copy())
+            }
+        }
+
+        if(!vertices[vertices.length - 1].isEquivalentTo(vertices[0])){
+            processed.push(vertices[vertices.length - 1].copy());
+        }
+
+        if(processed.length == 0 && vertices.length > 0) {
+            processed.push(vertices[0].copy());
+        }
+
+        return processed;
     }
 
     private static calculateEdges(vertices: Vertex[]): Edge[] {
         let edges: Edge[] = [];
+
+        if(vertices.length < 2) {
+            return edges;    
+        }
+
         for (let i = 0; i + 1 < vertices.length; i++) {
             edges.push(edge(vertices[i], vertices[i + 1]));
         }
+
         edges.push(edge(vertices[vertices.length - 1], vertices[0]));
+        
         return edges;
     }
 
     private static calculateAngularSum(edges: Edge[]): number {
         let sum = 0;
+
+        if(edges.length < 1) {
+            return sum;
+        }
+
         let priorHeading = edges[edges.length - 1].direction().angle();
         for (let i = 0; i < edges.length; i++) {
             sum += edges[i].start.angleTo(edges[i].end, priorHeading);
             priorHeading = edges[i].direction().angle();
         }
         return sum;
+    }
+
+    private static calculateVertexCentroid(vertices: Vertex[]): Vertex {
+        let N = vertices.length;
+        switch (N) {
+            case 0:
+                return vtx(0, 0);       
+            case 1:
+                return vertices[0];
+        }
+
+        let A = 0;
+        for(let i = 0; i < N; i++) {
+            let v0 = vertices[mod(i, vertices.length)];
+            let v1 = vertices[mod(i + 1, N)];
+            A += (v0.x * v1.y - v0.y * v1.x);
+        }
+        A *= 0.5;
+
+        let Cx = 0;
+        let Cy = 0;
+        for(let i = 0; i < N; i++) {
+            let v0 = vertices[mod(i, vertices.length)];
+            let v1 = vertices[mod(i + 1, N)];
+            Cx += (v0.x + v1.x) * (v0.x * v1.y - v0.y * v1.x);
+            Cy += (v0.y + v1.y) * (v0.x * v1.y - v0.y * v1.x);
+        }
+        Cx /= 6 * A
+        Cy /= 6 * A
+
+        return vtx(Cx, Cy);
     }
 
     /**

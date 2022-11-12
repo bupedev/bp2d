@@ -93,16 +93,44 @@ describe('Constructor', () => {
         let vertices = testVertices.offsetSquare.slice();
         let polygon = new Polygon(vertices);
 
-        expect(polygon.anchor).toStrictEqual(vtx(0.5, 0.5));
+        expect(polygon.anchor.x).toBeCloseTo(0.5);
+        expect(polygon.anchor.y).toBeCloseTo(0.5);
     });
 
-    it('should store coordinates correctly', () => {
-        let x = 1;
-        let y = 2;
-        let v = new Vertex(x, y);
+    it('should combine equivalent vertices', () => {
+        let v0 = new Vertex(1, 2);
+        let v1 = new Vertex(1, 2);
+        let v2 = new Vertex(2, -1);
+        let v3 = new Vertex(-1, 0);
+        let polygon = new Polygon([v0, v1, v2, v3]);
 
-        expect(v.x).toBe(x);
-        expect(v.y).toBe(y);
+        let expected = [v1, v2, v3];
+        polygon.vertices.forEach((v, i) => {
+            expect(expected[i].x).toBe(v.x);
+            expect(expected[i].y).toBe(v.y);
+        })
+    });
+
+    it('should construct successfully with a single repeated vertex', () => {
+        let v0 = new Vertex(0, 0);
+        let polygon = new Polygon([v0, v0, v0, v0]);
+
+        expect(polygon.vertices.length).toBe(1);
+        expect(polygon.vertices[0].x).toBe(v0.x);
+        expect(polygon.vertices[0].y).toBe(v0.y);
+        expect(polygon.edges.length).toBe(0);
+        expect(polygon.anchor.x).toBe(v0.x);
+        expect(polygon.anchor.y).toBe(v0.y);
+    });
+
+
+    it('should construct successfully with no vertices', () => {
+        let polygon = new Polygon([]);
+
+        expect(polygon.vertices.length).toBe(0);
+        expect(polygon.edges.length).toBe(0);
+        expect(polygon.anchor.x).toBe(0);
+        expect(polygon.anchor.y).toBe(0);
     });
 });
 
