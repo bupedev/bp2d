@@ -1,4 +1,5 @@
 import { vec, Vector } from "./vector";
+import { lerp } from "./../utility/numerics"
 
 /**
  * A vertex (or point) in two dimensional space.
@@ -97,7 +98,7 @@ export class Vertex {
      * @param vector The vector by which to displace the vertex.
      * @returns The vertex after translation.
      */
-     public static displace(vertex: Vertex, vector: Vector): Vertex {
+    public static displace(vertex: Vertex, vector: Vector): Vertex {
         return vertex.toVector().add(vector).toVertex();
     }
 
@@ -244,6 +245,16 @@ export class Vertex {
             ySum += vertices[i].y;
         }
         return vtx(xSum / vertexCount, ySum / vertexCount);
+    }
+
+    /**
+     * Linearly interpolates a vertex that lies between two vertices.
+     * @param start The first vertex between which to linearly interpolate.
+     * @param end The second vertex between which to linearly interpolate.
+     * @param proportion The proportion by which to interpolate. 0.0 represents the first vertex, while 1.0 represents the second vertex.
+     */
+    public static lerp(start: Vertex, end: Vertex, proportion: number): Vertex {
+        return vtx(lerp(start.x, end.x, proportion), lerp(start.y, end.y, proportion));
     }
 }
 

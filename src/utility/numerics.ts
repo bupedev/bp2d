@@ -19,3 +19,13 @@ export function mod(x: number, m: number): number {
 export function inRange(target: number, lower: number, upper: number): boolean {
     return lower <= target && target <= upper;
 }
+
+/**
+ * Linearly interpolates a numeric value that lies between two numeric values.
+ * @param start The first value between which to linearly interpolate.
+ * @param end The second value between which to linearly interpolate.
+ * @param proportion The proportion by which to interpolate. 0.0 represents the first value, while 1.0 represents the second value.
+ */
+export function lerp(start: number, end: number, proportion: number): number {
+    return start + (end - start) * proportion;
+}

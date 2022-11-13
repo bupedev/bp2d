@@ -531,7 +531,7 @@ describe('Displace', () => {
         { vertex: vtx(1, 2), vector: vec(0, 0), displaced: vtx(1, 2) },
         { vertex: vtx(1, 2), vector: vec(1, 2), displaced: vtx(2, 4) },
     ];
-    
+
     let baseCase = cases[3];
 
     cases.forEach(testCase => {
@@ -542,7 +542,7 @@ describe('Displace', () => {
             expect(actual.y).toBeCloseTo(displaced.y);
         });
     });
-    
+
     cases.forEach(testCase => {
         let vertex = testCase.vertex.copy(), vector = testCase.vector, displaced = testCase.displaced;
         it(`should be ${displaced} when the vertex is ${vertex} and the vector is ${vector} (static)`, () => {
@@ -551,7 +551,7 @@ describe('Displace', () => {
             expect(actual.y).toBeCloseTo(displaced.y);
         });
     });
-    
+
     it('should return the displaced instance when called on an object', () => {
         let u = baseCase.vertex.copy();
         let v = baseCase.vector;
@@ -568,5 +568,27 @@ describe('Displace', () => {
         let w = Vertex.displace(u, v);
         expect(u.x).not.toBe(w.x);
         expect(u.y).not.toBe(w.y);
+    });
+});
+
+describe('Lerp', () => {
+    type TestObject = { start: Vertex, end: Vertex, proportion: number, lerped: Vertex };
+
+    let cases: TestObject[] = [
+        { start: vtx(0, 0), end: vtx(0, 0), proportion: 0, lerped: vtx(0, 0) },
+        { start: vtx(0, 0), end: vtx(0, 0), proportion: 1, lerped: vtx(0, 0) },
+        { start: vtx(0, 0), end: vtx(2, 2), proportion: 0, lerped: vtx(0, 0) },
+        { start: vtx(0, 0), end: vtx(2, 2), proportion: 1, lerped: vtx(2, 2) },
+        { start: vtx(0, 0), end: vtx(2, 2), proportion: 0.5, lerped: vtx(1, 1) },
+        { start: vtx(0, 0), end: vtx(2, 2), proportion: -0.5, lerped: vtx(-1, -1) },
+    ];
+
+    cases.forEach(testCase => {
+        let start = testCase.start, end = testCase.end, proportion = testCase.proportion, lerped = testCase.lerped;
+        it(`should be ${lerped} when the start is ${start}, the end is ${end} and the proportion is ${proportion}.`, () => {
+            let actual = Vertex.lerp(start, end, proportion);
+            expect(actual.x).toBeCloseTo(lerped.x);
+            expect(actual.y).toBeCloseTo(lerped.y);
+        });
     });
 });

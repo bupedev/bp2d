@@ -165,3 +165,27 @@ describe('Intersect Line', () => {
         });
     });
 });
+
+describe('Lerp', () => {
+    type TestObject = { start: Line, end: Line, proportion: number, lerped: Line };
+
+    let cases: TestObject[] = [
+        { start: line(vtx(0, 0), vtx(2, 2)), end: line(vtx(0, 0), vtx(2, 2)), proportion: 0, lerped: line(vtx(0, 0), vtx(2, 2)) },
+        { start: line(vtx(0, 0), vtx(2, 2)), end: line(vtx(0, 0), vtx(2, 2)), proportion: 1, lerped: line(vtx(0, 0), vtx(2, 2)) },
+        { start: line(vtx(0, 0), vtx(2, 2)), end: line(vtx(-2, -2), vtx(0, 0)), proportion: 0, lerped: line(vtx(0, 0), vtx(2, 2)) },
+        { start: line(vtx(0, 0), vtx(2, 2)), end: line(vtx(-2, -2), vtx(0, 0)), proportion: 1, lerped: line(vtx(-2, -2), vtx(0, 0)) },
+        { start: line(vtx(0, 0), vtx(2, 2)), end: line(vtx(-2, -2), vtx(0, 0)), proportion: 0.5, lerped: line(vtx(-1, -1), vtx(1, 1)) },
+        { start: line(vtx(0, 0), vtx(2, 2)), end: line(vtx(-2, -2), vtx(0, 0)), proportion: -0.5, lerped: line(vtx(1, 1), vtx(3, 3)) }
+    ];
+
+    cases.forEach(testCase => {
+        let start = testCase.start, end = testCase.end, proportion = testCase.proportion, lerped = testCase.lerped;
+        it(`should be ${lerped} when the start is ${start}, the end is ${end} and the proportion is ${proportion}.`, () => {
+            let actual = Line.lerp(start, end, proportion);
+            expect(actual.start.x).toBeCloseTo(lerped.start.x);
+            expect(actual.start.y).toBeCloseTo(lerped.start.y);
+            expect(actual.end.x).toBeCloseTo(lerped.end.x);
+            expect(actual.end.y).toBeCloseTo(lerped.end.y);
+        });
+    });
+});

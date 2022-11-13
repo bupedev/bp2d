@@ -1,4 +1,4 @@
-import { mod, inRange } from '../../../src/utility/numerics';
+import { mod, inRange, lerp } from '../../../src/utility/numerics';
 
 describe('Modulo', () => {
     type TestObject = { dividend: number, divisor: number, expected: number };
@@ -43,6 +43,27 @@ describe('In Range', () => {
         let target = testCase.target, lower = testCase.lower, upper = testCase.upper, expected = testCase.expected;
         it(`should be ${expected} when the target is ${target} and the range is [${lower}, ${upper}]`, () => {
             let actual = inRange(target, lower, upper);
+            expect(actual).toBe(expected);
+        });
+    });
+});
+
+describe('Lerp', () => {
+    type TestObject = { start: number, end: number, proportion: number, expected: number };
+
+    let cases: TestObject[] = [
+        { start: 0, end: 0, proportion: 0, expected: 0 },
+        { start: 0, end: 0, proportion: 1, expected: 0 },
+        { start: 0, end: 2, proportion: 0, expected: 0 },
+        { start: 0, end: 2, proportion: 1, expected: 2 },
+        { start: 0, end: 2, proportion: 0.5, expected: 1 },
+        { start: 0, end: 2, proportion: -0.5, expected: -1 },
+    ];
+
+    cases.forEach(testCase => {
+        let start = testCase.start, end = testCase.end, proportion = testCase.proportion, expected = testCase.expected;
+        it(`should be ${expected} when the start is ${start}, end is ${end} and the proportion is ${proportion}`, () => {
+            let actual = lerp(start, end, proportion);
             expect(actual).toBe(expected);
         });
     });

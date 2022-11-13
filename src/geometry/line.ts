@@ -90,6 +90,16 @@ export class Line {
 
         return null;
     }
+
+    /**
+     * Linearly interpolates a line that lies between two lines.
+     * @param start The first line between which to linearly interpolate.
+     * @param end The second line between which to linearly interpolate.
+     * @param proportion The proportion by which to interpolate. 0.0 represents the first line, while 1.0 represents the second line.
+     */
+    public static lerp(start: Line, end: Line, proportion: number): Line {
+        return line(Vertex.lerp(start.start, end.start, proportion), Vertex.lerp(start.end, end.end, proportion))
+    }
 }
 
 /**
