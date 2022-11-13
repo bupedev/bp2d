@@ -3,6 +3,7 @@ import { vtx, Vertex } from './geometry/vertex';
 import { line, Line } from './geometry/line';
 import { poly, Polygon } from './geometry/polygon';
 import { CategoricalVariable } from './utility/categoricalVariable';
+import { mod, lerp, inRange } from './utility/numerics'
 
 export {
     CategoricalVariable,
@@ -13,5 +14,8 @@ export {
     vec,
     vtx,
     poly,
-    line
+    line,
+    mod, 
+    lerp, 
+    inRange
 };
