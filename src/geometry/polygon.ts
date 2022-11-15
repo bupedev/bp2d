@@ -460,6 +460,18 @@ export class Polygon {
         }
         return poly(vertices);
     }
+
+    /**
+     * Determines whether a particular polygon vertex is concave or not.
+     * @param vertexIndex The index of the vertex of which to assess covexity.
+     * @returns True if the vertex is convex, false if it is concave.
+     */
+    public isVertexConvex(vertexIndex: number): boolean {
+        let coming = this._edges[mod(vertexIndex - 1, this._edges.length)].direction();
+        let going = this._edges[mod(vertexIndex, this._edges.length)].direction();
+        return (!this._clockwise || coming.angleBetween(going) > Math.PI) && (this._clockwise || coming.angleBetween(going) < Math.PI);
+    }
+
 }
 
 export function poly(vertices: Vertex[]): Polygon {

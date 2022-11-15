@@ -720,3 +720,25 @@ describe('Create Regular', () => {
         });
     })
 });
+
+describe('Vertex Convexity', () => {
+    type TestObject = { polygon: Polygon, vertexIndex: number, isConvex: boolean };
+
+    let cases: TestObject[] = [
+        { polygon: poly(testVertices.boomerang), vertexIndex: -1, isConvex: true },
+        { polygon: poly(testVertices.boomerang), vertexIndex: 0, isConvex: false },
+        { polygon: poly(testVertices.boomerang), vertexIndex: 1, isConvex: true },
+        { polygon: poly(testVertices.boomerang), vertexIndex: 2, isConvex: true },
+        { polygon: poly(testVertices.boomerang), vertexIndex: 3, isConvex: true },
+        { polygon: poly(testVertices.boomerang), vertexIndex: 4, isConvex: false }
+    ];
+
+    cases.forEach(testCase => {
+        let polygon = testCase.polygon, vertexIndex = testCase.vertexIndex, isConvex = testCase.isConvex;
+        it(`should be ${isConvex} when the polygon is ${polygon} and the vertex index is ${vertexIndex}`, () => {
+            let actual = polygon.isVertexConvex(vertexIndex);
+            expect(actual).toEqual(isConvex);
+        });
+    })
+});
+
