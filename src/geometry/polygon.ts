@@ -472,6 +472,45 @@ export class Polygon {
         return (!this._clockwise || coming.angleBetween(going) > Math.PI) && (this._clockwise || coming.angleBetween(going) < Math.PI);
     }
 
+    /**
+     * Calculates the vector normal to the internal structure of the polygon at a specified vertex.
+     * @param vertexIndex The index of the vertex for which to calculate the normal.
+     * @returns The vector normal to the internal structure of the polygon at a specified vertex.
+     */
+    public vertexNormal(vertexIndex: number): Vector {
+        let startNormal = this.edgeNormal(vertexIndex - 1);
+        let endNormal = this.edgeNormal(vertexIndex);
+        let angleBetween;
+
+        if (this._clockwise) {
+            if (this.isVertexConvex(vertexIndex)) {
+                angleBetween = endNormal.angleBetween(startNormal);
+                return Vector.unit(endNormal.angle() + angleBetween / 2);
+            } else {
+                angleBetween = startNormal.angleBetween(endNormal);
+                return Vector.unit(endNormal.angle() - angleBetween / 2);
+            }
+        }
+        else {
+            if (this.isVertexConvex(vertexIndex)) {
+                angleBetween = startNormal.angleBetween(endNormal);
+                return Vector.unit(startNormal.angle() + angleBetween / 2);
+            } else {
+                angleBetween = endNormal.angleBetween(startNormal);
+                return Vector.unit(startNormal.angle() - angleBetween / 2);
+            }
+        }
+    }
+
+    /**
+     * Calculates the vector normal to the internal structure of the polygon at a specified edge.
+     * @param edgeIndex The index of the edge for which to calculate the normal.
+     * @returns The vector normal to the internal structure of the polygon at a specified edge.
+     */
+    public edgeNormal(edgeIndex: number): Vector {
+        let edge = this._edges[mod(edgeIndex, this._edges.length)];
+        return edge.normal(this._clockwise);
+    }
 }
 
 export function poly(vertices: Vertex[]): Polygon {

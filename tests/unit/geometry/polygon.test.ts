@@ -55,7 +55,14 @@ let testVertices = {
         vtx(1, 0),
         vtx(1, 2),
         vtx(2, 1)
-    ]
+    ],
+    "chunked": [
+        vtx(0, 1),
+        vtx(0, 0),
+        vtx(1, 0),
+        vtx(1, -1),
+        vtx(-1, 1),
+    ],
 };
 
 let testEdges = {
@@ -742,3 +749,62 @@ describe('Vertex Convexity', () => {
     })
 });
 
+describe('Vertex Normal', () => {
+    type TestObject = { polygon: Polygon, vertexIndex: number, normal: Vector };
+
+    let cases: TestObject[] = [
+        { polygon: poly(testVertices.chunked), vertexIndex: -1, normal: Vector.unit(7 * Math.PI / 8) },
+        { polygon: poly(testVertices.chunked), vertexIndex: 0, normal: Vector.unit(Math.PI / 4) },
+        { polygon: poly(testVertices.chunked), vertexIndex: 1, normal: Vector.unit(Math.PI / 4) },
+        { polygon: poly(testVertices.chunked), vertexIndex: 2, normal: Vector.unit(Math.PI / 4) },
+        { polygon: poly(testVertices.chunked), vertexIndex: 3, normal: Vector.unit(13 * Math.PI / 8) },
+        { polygon: poly(testVertices.chunked), vertexIndex: 4, normal: Vector.unit(7 * Math.PI / 8) },
+        { polygon: poly(testVertices.chunked), vertexIndex: 5, normal: Vector.unit(Math.PI / 4) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), vertexIndex: -1, normal: Vector.unit(Math.PI / 4) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), vertexIndex: 0, normal: Vector.unit(7 * Math.PI / 8) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), vertexIndex: 1, normal: Vector.unit(13 * Math.PI / 8) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), vertexIndex: 2, normal: Vector.unit(Math.PI / 4) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), vertexIndex: 3, normal: Vector.unit(Math.PI / 4) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), vertexIndex: 4, normal: Vector.unit(Math.PI / 4) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), vertexIndex: 5, normal: Vector.unit(7 * Math.PI / 8) },
+    ];
+
+    cases.forEach(testCase => {
+        let polygon = testCase.polygon, vertexIndex = testCase.vertexIndex, normal = testCase.normal;
+        it(`should be ${normal} when the polygon is ${polygon} and the vertex index is ${vertexIndex}`, () => {
+            let actual = polygon.vertexNormal(vertexIndex);
+            expect(actual.x).toEqual(normal.x);
+            expect(actual.y).toEqual(normal.y);
+        });
+    })
+});
+
+describe('Edge Normal', () => {
+    type TestObject = { polygon: Polygon, edgeIndex: number, normal: Vector };
+
+    let cases: TestObject[] = [
+        { polygon: poly(testVertices.chunked), edgeIndex: -1, normal: Vector.unit(Math.PI / 2) },
+        { polygon: poly(testVertices.chunked), edgeIndex: 0, normal: Vector.unit(0) },
+        { polygon: poly(testVertices.chunked), edgeIndex: 1, normal: Vector.unit(Math.PI / 2) },
+        { polygon: poly(testVertices.chunked), edgeIndex: 2, normal: Vector.unit(0) },
+        { polygon: poly(testVertices.chunked), edgeIndex: 3, normal: Vector.unit(5 * Math.PI / 4) },
+        { polygon: poly(testVertices.chunked), edgeIndex: 4, normal: Vector.unit(Math.PI / 2) },
+        { polygon: poly(testVertices.chunked), edgeIndex: 5, normal: Vector.unit(0) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), edgeIndex: -1, normal: Vector.unit(Math.PI / 2) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), edgeIndex: 0, normal: Vector.unit(5 * Math.PI / 4) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), edgeIndex: 1, normal: Vector.unit(0) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), edgeIndex: 2, normal: Vector.unit(Math.PI / 2) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), edgeIndex: 3, normal: Vector.unit(0) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), edgeIndex: 4, normal: Vector.unit(Math.PI / 2) },
+        { polygon: poly(testVertices.chunked.slice().reverse()), edgeIndex: 5, normal: Vector.unit(5 * Math.PI / 4) },
+    ];
+
+    cases.forEach(testCase => {
+        let polygon = testCase.polygon, edgeIndex = testCase.edgeIndex, normal = testCase.normal;
+        it(`should be ${normal} when the polygon is ${polygon} and the vertex index is ${edgeIndex}`, () => {
+            let actual = polygon.edgeNormal(edgeIndex);
+            expect(actual.x).toBeCloseTo(normal.x);
+            expect(actual.y).toBeCloseTo(normal.y);
+        });
+    })
+});
