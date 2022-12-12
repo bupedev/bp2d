@@ -32,7 +32,7 @@ export class CategoricalVariable {
      */
     constructor(categoryWeights: { [value: string]: number; }) {
         this._categoryWeights = {};
-        let total = Object.values(categoryWeights).reduce((prev, current, index, array) => prev + current);
+        let total = Object.values(categoryWeights).reduce((prev, current) => prev + current);
         Object.keys(categoryWeights).forEach(category => {
             this._categoryWeights[category] = categoryWeights[category] / total;
         });
@@ -45,17 +45,17 @@ export class CategoricalVariable {
      * @returns The category corresponding to the normalized value.
      */
     public getCategory(value: number): string {
-        let selected = null;
+        let selected = "";
         let cumulative_total = 0;
         let categories = Object.keys(this._categoryWeights);
         categories.forEach(category => {
             cumulative_total += this._categoryWeights[category];
-            if (!selected && cumulative_total > value) {
+            if (selected == "" && cumulative_total > value) {
                 selected = category;
             }
         });
 
-        if (!selected) {
+        if (selected == "") {
             selected = categories[categories.length - 1];
         }
 

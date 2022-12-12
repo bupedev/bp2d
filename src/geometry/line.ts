@@ -74,7 +74,7 @@ export class Line {
      * @param line The line to intersect with this one.
      * @returns The point of intersection if it exists, null otherwise.
      */
-    public intersectLine(line: Line): Vertex {
+    public intersectLine(line: Line): Vertex | null {
         let p: Vector = this.start.toVector();
         let q: Vector = line.start.toVector();
         let r: Vector = Vector.subtract(this.end.toVector(), p);

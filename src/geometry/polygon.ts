@@ -50,7 +50,7 @@ export class Polygon {
     }
 
     private static processVertices(vertices: Vertex[]): Vertex[] {
-        let processed = [];
+        let processed: Vertex[] = [];
         if (vertices.length == 0) {
             return processed;
         }
@@ -288,7 +288,7 @@ export class Polygon {
                 let edgeCount = polygon._edges.length;
                 for (let i = 0; i < edgeCount; i++) {
                     let base = polygon._edges[i];
-                    let subIndices = [];
+                    let subIndices: number[] = [];
                     for (let j = i + 1; j < i + edgeCount; j++) {
                         let tj = mod(j, edgeCount);
                         subIndices.push(tj);
@@ -409,7 +409,7 @@ export class Polygon {
                     Vector.add(control, Vector.scale(grain, +maxAnchorDistance * 2)).toVertex()));
         }
 
-        let hatchLines = [];
+        let hatchLines: Line[] = Array<Line>();
         candidates.forEach(candidate => {
             let intersections = this.intersectLine(candidate);
             for (let i = 0; i < intersections.length - 1; i += 2) {
