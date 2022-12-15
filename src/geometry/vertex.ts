@@ -256,6 +256,15 @@ export class Vertex {
     public static lerp(start: Vertex, end: Vertex, proportion: number): Vertex {
         return vtx(lerp(start.x, end.x, proportion), lerp(start.y, end.y, proportion));
     }
+
+    /**
+     * Calculates the displacement vector that would span this and another vertex.
+     * @param end The other vertex.
+     * @returns The displacement vector that would span this and the other vertex.
+     */
+    public vectorTo(end: Vertex): Vector {
+        return vec(end.x - this.x, end.y - this.y);
+    }
 }
 
 /**

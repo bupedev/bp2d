@@ -592,3 +592,40 @@ describe('Lerp', () => {
         });
     });
 });
+
+describe('Vector To', () => {
+    type TestObject = { start: Vertex, end: Vertex, vector: Vector };
+
+    let cases: TestObject[] = [
+        { start: vtx(0, 0), end: vtx(0, 0), vector: vec(0, 0) },
+        { start: vtx(0, 0), end: vtx(1, 0), vector: vec(1, 0) },
+        { start: vtx(0, 0), end: vtx(0, 1), vector: vec(0, 1) },
+        { start: vtx(0, 0), end: vtx(1, 1), vector: vec(1, 1) },
+        { start: vtx(0, 0), end: vtx(-1, -1), vector: vec(-1, -1) },
+        { start: vtx(1, 1), end: vtx(0, 0), vector: vec(-1, -1) },
+        { start: vtx(4, -4), end: vtx(-3, 5), vector: vec(-7, 9) },
+    ];
+
+    cases.forEach(testCase => {
+        let start = testCase.start, end = testCase.end, vector = testCase.vector;
+        it(`should be ${vector} when the start is ${start} and the end is ${end}.`, () => {
+            let actual = start.vectorTo(end);
+            expect(actual.x).toBeCloseTo(vector.x);
+            expect(actual.y).toBeCloseTo(vector.y);
+        });
+    });
+
+    const target = cases[6];
+
+    it('should not mutate either vertex', () => {
+        let a = target.start.copy();
+        let b = target.end.copy();
+
+        let v = a.vectorTo(b);
+
+        expect(a.x).toBe(target.start.x);
+        expect(a.y).toBe(target.start.y);
+        expect(b.x).toBe(target.end.x);
+        expect(b.y).toBe(target.end.y);
+    })
+});
