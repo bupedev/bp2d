@@ -243,6 +243,27 @@ export class Vector {
     public static reflect(vector: Vector, axis: Vector): Vector {
         return vector.copy().reflect(axis);
     }
+
+    /**
+     * Calculates the projection of this vector upon another vector's direction.
+     * @param basis The vector upon which to project.
+     * @returns The projection of this vector upon the basis vector's direction.
+     */
+    public project(basis: Vector): Vector {
+        let proj = basis.copy().scale(this.dot(basis)/basis.dot(basis));
+        this.x = proj.x, this.y = proj.y;
+        return this;
+    }
+
+    /**
+     * Calculates the projection of a vector upon another vector's direction.
+     * @param vector The vector to project.
+     * @param basis The vector upon which to project.
+     * @returns The projection of the vector upon the basis vector's direction.
+     */
+    public static project(vector: Vector, basis: Vector): Vector {
+        return vector.copy().project(basis);
+    }
 }
 
 /**

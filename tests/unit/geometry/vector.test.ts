@@ -483,3 +483,57 @@ describe('Reflect', () => {
         expect(u.y).not.toBe(v.y);
     });
 });
+
+describe('Project', () => {
+    type TestObject = { vector: Vector, basis: Vector, projection: Vector };
+
+    let cases: TestObject[] = [
+        { vector: vec(0, 0), basis: vec(1, 0), projection: vec(0, 0) },
+        { vector: vec(0, 0), basis: vec(0, 1), projection: vec(0, 0) },
+        { vector: vec(1, 1), basis: vec(1, 0), projection: vec(1, 0) },
+        { vector: vec(1, 1), basis: vec(0, 1), projection: vec(0, 1) },
+        { vector: vec(-1, -1), basis: vec(1, 0), projection: vec(-1, 0) },
+        { vector: vec(-1, -1), basis: vec(0, 1), projection: vec(0, -1) },
+        { vector: vec(1, 1), basis: vec(-1, 0), projection: vec(1, 0) },
+        { vector: vec(1, 1), basis: vec(0, -1), projection: vec(0, 1) },
+        { vector: vec(-2, 2), basis: vec(4, -3), projection: vec(-56/25, 42/25) },
+    ];
+
+    cases.forEach(testCase => {
+        let vector = testCase.vector.copy(), basis = testCase.basis, projection = testCase.projection;
+        it(`should be ${projection} when the vector is ${vector} and the basis is ${basis} (instance)`, () => {
+            vector.project(basis);
+            expect(vector.x).toBeCloseTo(projection.x);
+            expect(vector.y).toBeCloseTo(projection.y);
+        });
+    });
+
+    cases.forEach(testCase => {
+        let vector = testCase.vector.copy(), basis = testCase.basis, projection = testCase.projection;
+        it(`should be ${projection} when the vector is ${vector} and the basis is ${basis} (static)`, () => {
+            let u = Vector.project(vector, basis);
+            expect(u.x).toBeCloseTo(projection.x);
+            expect(u.y).toBeCloseTo(projection.y);
+        });
+    });
+
+    it('should return the projected instance', () => {
+        let u = cases[8].vector.copy();
+        let a = cases[8].basis.copy();
+
+        let v = u.project(a);
+
+        expect(u.x).toBeCloseTo(v.x);
+        expect(u.y).toBeCloseTo(v.y);
+    });
+
+    it('should not mutate the vector when called statically', () => {
+        let u = cases[8].vector.copy();
+        let a = cases[8].basis.copy();
+
+        let v = Vector.project(u, a);
+
+        expect(u.x).not.toBe(v.x);
+        expect(u.y).not.toBe(v.y);
+    });
+});
