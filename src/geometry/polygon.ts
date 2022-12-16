@@ -1,4 +1,4 @@
-import { line, Line } from "./line"
+import { lineSegment, LineSegment } from "./lineSegment"
 import { Vector, vec } from "./vector"
 import { Vertex, vtx } from "./vertex";
 import { mod } from "./../utility/numerics"
@@ -8,7 +8,7 @@ import { mod } from "./../utility/numerics"
  */
 export class Polygon {
     private _vertices: Vertex[];
-    private _edges: Line[];
+    private _edges: LineSegment[];
     private _clockwise: boolean;
 
     /**
@@ -21,7 +21,7 @@ export class Polygon {
     /**
      * A copy of the collection of edges that constitute the boundary of the polygon.
      */
-    public get edges(): Line[] {
+    public get edges(): LineSegment[] {
         return this._edges.map((edge) => edge.copy());
     };
 
@@ -75,23 +75,23 @@ export class Polygon {
         return processed;
     }
 
-    private static calculateEdges(vertices: Vertex[]): Line[] {
-        let edges: Line[] = [];
+    private static calculateEdges(vertices: Vertex[]): LineSegment[] {
+        let edges: LineSegment[] = [];
 
         if (vertices.length < 2) {
             return edges;
         }
 
         for (let i = 0; i + 1 < vertices.length; i++) {
-            edges.push(line(vertices[i], vertices[i + 1]));
+            edges.push(lineSegment(vertices[i], vertices[i + 1]));
         }
 
-        edges.push(line(vertices[vertices.length - 1], vertices[0]));
+        edges.push(lineSegment(vertices[vertices.length - 1], vertices[0]));
 
         return edges;
     }
 
-    private static calculateAngularSum(edges: Line[]): number {
+    private static calculateAngularSum(edges: LineSegment[]): number {
         let sum = 0;
 
         if (edges.length < 1) {
@@ -157,22 +157,22 @@ export class Polygon {
     }
 
     /**
-     * Calculates all distinct intersecting points between the edges of this polygon and a line.
-     * @param line The line to intersect with the edges of this polygon.
+     * Calculates all distinct intersecting points between the edges of this polygon and a lineSegment.
+     * @param lineSegment The lineSegment to intersect with the edges of this polygon.
      * @returns All distinct intersecting points in an array.
      */
-    public intersectLine(line: Line): Vertex[] {
+    public intersectLineSegment(lineSegment: LineSegment): Vertex[] {
         let vertices: Vertex[] = [];
 
         this.edges.forEach(edge => {
-            let intersection = edge.intersectLine(line);
+            let intersection = edge.intersectLineSegment(lineSegment);
             if (intersection) {
                 vertices.push(intersection);
             }
         });
 
         vertices.sort((a, b) => {
-            return a.distanceTo(line.start) - b.distanceTo(line.start)
+            return a.distanceTo(lineSegment.start) - b.distanceTo(lineSegment.start)
         });
 
         return vertices.filter((vertex, index, array) => {
@@ -293,7 +293,7 @@ export class Polygon {
                         let tj = mod(j, edgeCount);
                         subIndices.push(tj);
                         let target = polygon._edges[tj];
-                        let intersection = base.intersectLine(target);
+                        let intersection = base.intersectLineSegment(target);
                         if (intersection && !(intersection.isEquivalentTo(base.end) || intersection.isEquivalentTo(base.start))) {
                             let modifiedVertices = polygon._vertices.filter((_, index) => !subIndices.includes(index));
                             modifiedVertices.splice(i + 1, 0, intersection);
@@ -353,7 +353,7 @@ export class Polygon {
      * @param edges The collection of unordered edges. 
      * @returns A polygon created by sorting the vertices of the unordered edges.
      */
-    public static fromUnorderedEdges(edges: Line[]): Polygon {
+    public static fromUnorderedEdges(edges: LineSegment[]): Polygon {
         let vertices = [edges[0].start];
         let useEnd = true;
         let targetIndex = 0;
@@ -386,38 +386,38 @@ export class Polygon {
     }
 
     /**
-     * Generates hatching lines within the bounds of the polygon with specified angle and spacing configuration.
-     * @param angle The angle of the hatch lines within the polygon.
-     * @param spacing The desired spacing between hatch lines.
-     * @param jitter A function that generates jitter for each hatch line, this function must accept values between 0 and 1 and 
+     * Generates hatching lineSegments within the bounds of the polygon with specified angle and spacing configuration.
+     * @param angle The angle of the hatch lineSegments within the polygon.
+     * @param spacing The desired spacing between hatch lineSegments.
+     * @param jitter A function that generates jitter for each hatch lineSegment, this function must accept values between 0 and 1 and 
      *               map them to values -1 and 1.
      * @param randomizer A randomization function to use as the input for the jitter function that returns values between 0 and 1.
-     * @returns An array of line representing the hatch lines within the polygon
+     * @returns An array of lineSegment representing the hatch lineSegments within the polygon
      */
-    public hatchFill(angle: number, spacing: number, jitter: (x: number) => number, randomizer: () => number): Line[] {
+    public hatchFill(angle: number, spacing: number, jitter: (x: number) => number, randomizer: () => number): LineSegment[] {
         let maxAnchorDistance = this.getMaxAnchorDistance();
         let steps = Math.floor(maxAnchorDistance / spacing);
         let grain = Vector.unit(angle);
         let ortho = grain.copy().rotate(Math.PI / 2);
         let candidates = [];
         for (let offset = -steps; offset <= steps; offset++) {
-            let lineShift = Vector.scale(ortho, spacing * (offset + jitter(randomizer())));
-            let control = this.anchor.toVector().add(lineShift);
+            let lineSegmentShift = Vector.scale(ortho, spacing * (offset + jitter(randomizer())));
+            let control = this.anchor.toVector().add(lineSegmentShift);
             candidates.push(
-                line(
+                lineSegment(
                     Vector.add(control, Vector.scale(grain, -maxAnchorDistance * 2)).toVertex(),
                     Vector.add(control, Vector.scale(grain, +maxAnchorDistance * 2)).toVertex()));
         }
 
-        let hatchLines: Line[] = Array<Line>();
+        let hatchLineSegments: LineSegment[] = Array<LineSegment>();
         candidates.forEach(candidate => {
-            let intersections = this.intersectLine(candidate);
+            let intersections = this.intersectLineSegment(candidate);
             for (let i = 0; i < intersections.length - 1; i += 2) {
-                hatchLines.push(line(intersections[i], intersections[i + 1]));
+                hatchLineSegments.push(lineSegment(intersections[i], intersections[i + 1]));
             }
         });
 
-        return hatchLines;
+        return hatchLineSegments;
     }
 
     private getMaxAnchorDistance(): number {
