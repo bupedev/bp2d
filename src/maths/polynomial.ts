@@ -72,28 +72,36 @@ export class Polynomial {
         return new Polynomial(derivativeCoefficients);
     }
 
-    public getRoot(guess: number = 0, threshold: number = 1e-9, maxIterations: number = 100): number {
-        const firstDerivative = this.getDerivative();
-        const secondDerivative = firstDerivative.getDerivative();
+    // public getRoot(guess: number = 0, threshold: number = 1e-9, maxIterations: number = 100): number {
+    //     const firstDerivative = this.getDerivative();
+    //     const secondDerivative = firstDerivative.getDerivative();
         
-        let k = 0;
-        let xk = guess;
-        let pk0 = this.evaluate(xk);
-        while(pk0 > threshold && k < maxIterations) {
-            const pk1 = firstDerivative.evaluate(xk);
-            const pk2 = secondDerivative.evaluate(xk);
-            const G = pk1/pk0;
-            const H = (G ** 2) - pk2 / pk0;
-            const det = ((k - 1) * (k * H - G ** 2)) ** 0.5;
-            const d0 = G + det;
-            const d1 = G - det;
-            const a = k / Math.max(d0, d1);
+    //     let k = 0;
+    //     let xk = guess;
+    //     let pk0 = this.evaluate(xk);
+    //     while(Math.abs(pk0) > threshold && k < maxIterations) {
+    //         const pk1 = firstDerivative.evaluate(xk);
+    //         const pk2 = secondDerivative.evaluate(xk);
+    //         const G = pk1/pk0;
+    //         const H = (G ** 2) - pk2 / pk0;
+    //         const det = ((k - 1) * (k * H - G ** 2)) ** 0.5;
+    //         const d0 = G + det;
+    //         const d1 = G - det;
 
-            k++;
-            xk -= a;
-            pk0 = this.evaluate(xk);
-        }
+    //         let a: number;
+    //         if(d0 == 0) {
+    //             a = k / d1;
+    //         } else if (d1 == 0) {
+    //             a = k / d0;
+    //         } else {
+    //             a = k / Math.max(d0, d1);
+    //         }
+
+    //         k++;
+    //         xk -= a;
+    //         pk0 = this.evaluate(xk);
+    //     }
         
-        return xk;
-    }
+    //     return xk;
+    // }
 }
